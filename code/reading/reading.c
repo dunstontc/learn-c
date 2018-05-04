@@ -16,7 +16,10 @@ int main()
     if (file)
     {
         while ((c = getc(file)) != EOF)
+        {
             putchar(c);
+        }
+
         fclose(file);
     }
 
