@@ -1,18 +1,13 @@
 BUILD_DIR := ./bin
+MAIN := hello
 
-hello.build:
-	gcc ./hello.c -o $(BUILD_DIR)/hello
+build:
+	gcc ./$(MAIN).c -o $(BUILD_DIR)/$(MAIN)
 
-hello.run:
-	@$(BUILD_DIR)/hello
-
-input.build:
-	gcc ./input.c -o $(BUILD_DIR)/input
-
-input.run:
-	@$(BUILD_DIR)/input
+run:
+	@$(BUILD_DIR)/$(MAIN)
 
 clean:
 	rm ./bin/*
 
-.PHONY: clean hello.build hello.run input.build input.run
+.PHONY: clean build run
