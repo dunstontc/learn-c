@@ -10,6 +10,7 @@ Thumbs.db
 
 # Built files
 **/bin/*
+*.out
 
 # Local files
 .env
