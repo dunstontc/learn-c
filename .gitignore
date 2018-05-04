@@ -1,0 +1,24 @@
+#   ┌─┐┬┌┬┐┬┌─┐┌┐┌┌─┐┬─┐┌─┐
+#   │ ┬│ │ ││ ┬││││ │├┬┘├┤
+#  o└─┘┴ ┴ ┴└─┘┘└┘└─┘┴└─└─┘
+
+# Mac files
+Icon?
+.DS_store
+Desktop.ini
+Thumbs.db
+
+# Built files
+**/bin/*
+
+# Local files
+.env
+
+# Misc.
+!.gitkeep
+.idea
+.vscode
+.projectile
+*/tags
+
+
