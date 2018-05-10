@@ -4,10 +4,7 @@
 ## C
 
 ### Libs
-- [nothings/stb](https://github.com/nothings/stb)
-  - stb single-file public domain libraries for C/C++
-- [nothings/single_file_libs](https://github.com/nothings/single_file_libs)
-  - List of single-file C/C++ libraries.
+- [Bill-Gray/PDCurses](https://github.com/Bill-Gray/PDCurses)
 - [kkos/oniguruma](https://github.com/kkos/oniguruma)
   - regular expression library
 - [jorisvink/kore](https://github.com/jorisvink/kore)
@@ -24,8 +21,18 @@
   - tmux source code
 - [curl/curl](https://github.com/curl/curl)
   - A command line tool and library for transferring data with URL syntax, supporting HTTP, HTTPS, FTP, FTPS, GOPHER, TFTP, SCP, SFTP, SMB, TELNET, DICT, LDAP, LDAPS, FILE, IMAP, SMTP, POP3, RTSP and RTMP. libcurl offers a myriad of powerful 
+- [jonas/tig](https://github.com/jonas/tig)
+  - Text-mode interface for git
+- [neomutt/neomutt](https://github.com/neomutt/neomutt)
+  - ✉️ Teaching an Old Dog New Tricks -- IRC: #neomutt on irc.freenode.net
+- [vifm/vifm](https://github.com/vifm/vifm)
+  - Vifm is a file manager with curses interface, which provides Vi[m]-like environment for managing objects within file systems, extended with some useful ideas from mutt.
 
 ### Etc.
+- [nothings/stb](https://github.com/nothings/stb)
+  - stb single-file public domain libraries for C/C++
+- [nothings/single_file_libs](https://github.com/nothings/single_file_libs)
+  - List of single-file C/C++ libraries.
 - [dmulholland/cops](https://github.com/dmulholland/cops)
   - An argument-parsing library for C.
 - [bartobri/bmenu](https://github.com/bartobri/bmenu)
@@ -42,6 +49,13 @@
 - [dmulholland/options](https://github.com/dmulholland/options)
   - An argument-parsing library for C++.
 
+### Projects
+- [jeaye/color_coded](https://github.com/jeaye/color_coded)
+  - A vim plugin for libclang-based highlighting of C, C++, ObjC
+- [jeaye/value-category-cheatsheet](https://github.com/jeaye/value-category-cheatsheet)
+  - A C++14 cheat-sheet on lvalues, rvalues, xvalues, and more
+- [jeaye/stdman](https://github.com/jeaye/stdman)
+  - Formatted C++20 stdlib man pages (cppreference)
 
-## People
+### People
 - [Daniel Stenberg](https://github.com/bagder) (core contributor to CURL)
