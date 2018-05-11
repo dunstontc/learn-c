@@ -27,8 +27,12 @@
   - ✉️ Teaching an Old Dog New Tricks -- IRC: #neomutt on irc.freenode.net
 - [vifm/vifm](https://github.com/vifm/vifm)
   - Vifm is a file manager with curses interface, which provides Vi[m]-like environment for managing objects within file systems, extended with some useful ideas from mutt.
+- [apple/darwin-xnu](https://github.com/apple/darwin-xnu)
+  - The Darwin Kernel (mirror) 
 
 ### Etc.
+- [facebook/zstd](https://github.com/facebook/zstd)
+  - Zstandard - Fast real-time compression algorithm
 - [nothings/stb](https://github.com/nothings/stb)
   - stb single-file public domain libraries for C/C++
 - [nothings/single_file_libs](https://github.com/nothings/single_file_libs)
@@ -48,6 +52,10 @@
   - RE2 is a fast, safe, thread-friendly alternative to backtracking regular expression engines like those used in PCRE, Perl, and Python. It is a C++ library.
 - [dmulholland/options](https://github.com/dmulholland/options)
   - An argument-parsing library for C++.
+- [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow)
+  - Computation using data flow graphs for scalable machine learning
+  - [tensorflow/serving](https://github.com/tensorflow/serving)
+    - A flexible, high-performance serving system for machine learning models
 
 ### Projects
 - [jeaye/color_coded](https://github.com/jeaye/color_coded)
@@ -56,6 +64,12 @@
   - A C++14 cheat-sheet on lvalues, rvalues, xvalues, and more
 - [jeaye/stdman](https://github.com/jeaye/stdman)
   - Formatted C++20 stdlib man pages (cppreference)
+- [apple/foundationdb](https://github.com/apple/foundationdb)
+  - FoundationDB - the open source, distributed, transactional key-value store
+- [facebook/rocksdb](https://github.com/facebook/rocksdb)
+  - A library that provides an embeddable, persistent key-value store for fast storage.
+- [facebook/watchman](https://github.com/facebook/watchman)
+  - Watches files and records, or triggers actions, when they change.
 
 ### People
 - [Daniel Stenberg](https://github.com/bagder) (core contributor to CURL)
