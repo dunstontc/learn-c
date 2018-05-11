@@ -9,7 +9,7 @@ Desktop.ini
 Thumbs.db
 
 # Built files
-**/bin/*
+**/out/*
 **/*.out
 **/*.o
 **/*.dSYM
@@ -20,7 +20,8 @@ Thumbs.db
 .env
 
 # Misc.
-!.gitkeep
+!**/.gitkeep
+!**/.keep
 .idea
 .vscode
 .projectile
