@@ -13,6 +13,8 @@
   - A single-header ANSI C gui library.
 - [heodown/hoedown](https://github.com/heodown/hoedown)
   - Standards compliant, fast, secure markdown processing library in C.
+- [andlabs/libui](https://github.com/andlabs/libui)
+  - Simple and portable (but not inflexible) GUI library in C that uses the native GUI technologies of each platform it supports.
 
 ### Software
 - [vim/vim](https://github.com/vim/vim)
