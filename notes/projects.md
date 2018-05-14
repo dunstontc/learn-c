@@ -15,6 +15,7 @@
   - Standards compliant, fast, secure markdown processing library in C.
 - [andlabs/libui](https://github.com/andlabs/libui)
   - Simple and portable (but not inflexible) GUI library in C that uses the native GUI technologies of each platform it supports.
+- [nodejs/http-parser](https://github.com/nodejs/http-parser)
 
 ### Software
 - [vim/vim](https://github.com/vim/vim)
