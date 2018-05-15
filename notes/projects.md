@@ -21,6 +21,8 @@
   - Darknet is an open source neural network framework written in C and CUDA. It is fast, easy to install, and supports CPU and GPU computation.
 
 ### Software
+- [ggreer/the_silver_searcher](https://github.com/ggreer/the_silver_searcher)
+  - A code-searching tool similar to ack, but faster.
 - [git/git](https://github.com/git/git)
   - Git is a fast, scalable, distributed revision control system with an unusually rich command set that provides both high-level operations and full access to internals.
 - [vim/vim](https://github.com/vim/vim)
