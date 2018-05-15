@@ -15,22 +15,33 @@
   - Standards compliant, fast, secure markdown processing library in C.
 - [andlabs/libui](https://github.com/andlabs/libui)
   - Simple and portable (but not inflexible) GUI library in C that uses the native GUI technologies of each platform it supports.
+- [antirez/sds](https://github.com/antirez/sds)
+  - Simple Dynamic Strings library for C
+- [pjreddie/darknet](https://github.com/pjreddie/darknet)
+  - 
+Darknet is an open source neural network framework written in C and CUDA. It is fast, easy to install, and supports CPU and GPU computation.
 
 ### Software
+- [git/git](https://github.com/git/git)
+  - Git is a fast, scalable, distributed revision control system with an unusually rich command set that provides both high-level operations and full access to internals.
 - [vim/vim](https://github.com/vim/vim)
   - The official Vim repository
 - [tmux/tmux](https://github.com/tmux/tmux)
   - tmux source code
+- [apple/darwin-xnu](https://github.com/apple/darwin-xnu)
+  - The Darwin Kernel (mirror) 
+- [torvalds/linux](https://github.com/torvalds/linux)
+  - Linux kernel source <tre></tre>e></tre>e
 - [curl/curl](https://github.com/curl/curl)
   - A command line tool and library for transferring data with URL syntax, supporting HTTP, HTTPS, FTP, FTPS, GOPHER, TFTP, SCP, SFTP, SMB, TELNET, DICT, LDAP, LDAPS, FILE, IMAP, SMTP, POP3, RTSP and RTMP. libcurl offers a myriad of powerful 
 - [jonas/tig](https://github.com/jonas/tig)
   - Text-mode interface for git
-- [neomutt/neomutt](https://github.com/neomutt/neomutt)
-  - ✉️ Teaching an Old Dog New Tricks -- IRC: #neomutt on irc.freenode.net
-- [vifm/vifm](https://github.com/vifm/vifm)
-  - Vifm is a file manager with curses interface, which provides Vi[m]-like environment for managing objects within file systems, extended with some useful ideas from mutt.
-- [apple/darwin-xnu](https://github.com/apple/darwin-xnu)
-  - The Darwin Kernel (mirror) 
+- [antirez/redis](https://github.com/antirez/redis)
+  - Redis is an in-memory database that persists on disk. The data model is key-value, but many different kind of values are supported: Strings, Lists, Sets, Sorted Sets, Hashes, HyperLogLogs, Bitmaps.
+- [FFmpeg/FFmpeg](https://github.com/FFmpeg/FFmpeg)
+  - FFmpeg is a collection of libraries and tools to process multimedia content such as audio, video, subtitles and related metadata.
+- [wg/wrk](https://github.com/wg/wrk)
+  - Modern HTTP benchmarking tool
 
 ### Etc.
 - [facebook/zstd](https://github.com/facebook/zstd)
@@ -45,11 +56,40 @@
   - A general purpose terminal menu that focuses on ease of configuration and use.
 - [bartobri/data-structures-c](https://github.com/bartobri/data-structures-c)
   - A collection of algorithms for data structure manipulation in C
+- [antirez/kilo](https://github.com/antirez/kilo)
+  - A text editor in less than 1000 LOC with syntax highlight and search.
+- [neomutt/neomutt](https://github.com/neomutt/neomutt)
+  - ✉️ Teaching an Old Dog New Tricks -- IRC: #neomutt on irc.freenode.net
+- [vifm/vifm](https://github.com/vifm/vifm)
+  - Vifm is a file manager with curses interface, which provides Vi[m]-like environment for managing objects within file systems, extended with some useful ideas from mutt.
 
 
 ## C++
 
+### Software
+- [electron/electron](https://github.com/electron/electron)
+  - Build cross platform desktop apps with JavaScript, HTML, and CSS
+- [opencv/opencv](https://github.com/opencv/opencv)
+  - Open Source Computer Vision Library
+- [bitcoin/bitcoin](https://github.com/bitcoin/bitcoin)
+  - Bitcoin Core integration/staging tree
+- [google/protobuf](https://github.com/google/protobuf)
+  - Protocol Buffers - Google's data interchange format 
+- [caffe2/caffe2](https://github.com/caffe2/caffe2)
+  - Caffe2 is a lightweight, modular, and scalable deep learning framework
+- [godotengine/godot](https://github.com/godotengine/godot)
+  - Godot Engine – Multi-platform 2D and 3D game engine 
+
+### Programs
+- [tamlok/vnote](https://github.com/tamlok/vnote)
+  - A Vim-inspired note-taking application that knows programmers and Markdown better. 
+- [aseprite/aseprite](https://github.com/aseprite/aseprite)
+  - Animated sprite editor & pixel art tool (Windows, macOS, Linux) 
+
+
 ### Libs
+- [nlohmann/json](https://github.com/nlohmann/json)
+  - JSON for Modern C++
 - [google/re2](https://github.com/google/re2)
   - RE2 is a fast, safe, thread-friendly alternative to backtracking regular expression engines like those used in PCRE, Perl, and Python. It is a C++ library.
 - [dmulholland/options](https://github.com/dmulholland/options)
@@ -68,10 +108,14 @@
   - Formatted C++20 stdlib man pages (cppreference)
 - [apple/foundationdb](https://github.com/apple/foundationdb)
   - FoundationDB - the open source, distributed, transactional key-value store
+- [google/leveldb](https://github.com/google/leveldb)
+  - LevelDB is a fast key-value storage library written at Google that provides an ordered mapping from string keys to string values.
 - [facebook/rocksdb](https://github.com/facebook/rocksdb)
   - A library that provides an embeddable, persistent key-value store for fast storage.
 - [facebook/watchman](https://github.com/facebook/watchman)
   - Watches files and records, or triggers actions, when they change.
 
-### People
-- [Daniel Stenberg](https://github.com/bagder) (core contributor to CURL)
+### Misc
+- [ApolloAuto/apollo](https://github.com/ApolloAuto/apollo)
+  - An open autonomous driving platform
+
