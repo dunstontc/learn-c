@@ -18,8 +18,7 @@
 - [antirez/sds](https://github.com/antirez/sds)
   - Simple Dynamic Strings library for C
 - [pjreddie/darknet](https://github.com/pjreddie/darknet)
-  - 
-Darknet is an open source neural network framework written in C and CUDA. It is fast, easy to install, and supports CPU and GPU computation.
+  - Darknet is an open source neural network framework written in C and CUDA. It is fast, easy to install, and supports CPU and GPU computation.
 
 ### Software
 - [git/git](https://github.com/git/git)
