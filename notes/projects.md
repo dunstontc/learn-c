@@ -4,15 +4,16 @@
 ## C
 
 ### Libs
-- [Bill-Gray/PDCurses](https://github.com/Bill-Gray/PDCurses)
+- [libuv/libuv](https://github.com/libuv/libuv)
+  - libuv is a multi-platform support library with a focus on asynchronous I/O. It was primarily developed for use by Node.js, but it's also used by Luvit, Julia, pyuv, and others.
+- [Qix-/xopt](https://github.com/Qix-/xopt)
+  - ANSI C (C89) command line options parser
 - [kkos/oniguruma](https://github.com/kkos/oniguruma)
   - regular expression library
 - [jorisvink/kore](https://github.com/jorisvink/kore)
   - An easy to use, scalable and secure web application framework for writing web APIs in C.
 - [vurtun/nuklear](https://github.com/vurtun/nuklear)
   - A single-header ANSI C gui library.
-- [heodown/hoedown](https://github.com/heodown/hoedown)
-  - Standards compliant, fast, secure markdown processing library in C.
 - [andlabs/libui](https://github.com/andlabs/libui)
   - Simple and portable (but not inflexible) GUI library in C that uses the native GUI technologies of each platform it supports.
 - [antirez/sds](https://github.com/antirez/sds)
@@ -43,6 +44,8 @@
   - FFmpeg is a collection of libraries and tools to process multimedia content such as audio, video, subtitles and related metadata.
 - [wg/wrk](https://github.com/wg/wrk)
   - Modern HTTP benchmarking tool
+- [heodown/hoedown](https://github.com/heodown/hoedown)
+  - Standards compliant, fast, secure markdown processing library in C.
 
 ### Etc.
 - [facebook/zstd](https://github.com/facebook/zstd)
