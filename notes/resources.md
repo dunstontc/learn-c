@@ -1,5 +1,12 @@
 # Resources
 
+
+## Package Management
+- [conan-io/conan](https://github.com/conan-io/conan)
+  - Conan.io - The open-source C/C++ package manager
+- [Microsoft/vcpkg](https://github.com/Microsoft/vcpkg)
+  - C++ Library Manager for Windows, Linux, and MacOS
+
 ## YouTube
 - [Learn C Programming in 1 hour.](https://www.youtube.com/watch?v=N349SLNdTwg)
 

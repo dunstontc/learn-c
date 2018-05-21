@@ -62,6 +62,10 @@
   - A collection of algorithms for data structure manipulation in C
 - [antirez/kilo](https://github.com/antirez/kilo)
   - A text editor in less than 1000 LOC with syntax highlight and search.
+- [vasi/pixz](https://github.com/vasi/pixz)
+  - Parallel, indexed xz compressor
+
+### Programs
 - [neomutt/neomutt](https://github.com/neomutt/neomutt)
   - ✉️ Teaching an Old Dog New Tricks -- IRC: #neomutt on irc.freenode.net
 - [vifm/vifm](https://github.com/vifm/vifm)
@@ -88,7 +92,9 @@
 - [tamlok/vnote](https://github.com/tamlok/vnote)
   - A Vim-inspired note-taking application that knows programmers and Markdown better. 
 - [aseprite/aseprite](https://github.com/aseprite/aseprite)
-  - Animated sprite editor & pixel art tool (Windows, macOS, Linux) 
+  - Animated sprite editor & pixel art tool (Windows, macOS, Linux)
+- [mawww/kakoune](https://github.com/mawww/kakoune)
+  - mawww's experiment for a better code editor
 
 
 ### Libs
