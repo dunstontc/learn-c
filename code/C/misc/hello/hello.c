@@ -1,8 +1,6 @@
 #include "hello.h"
 
-int main(void)
+void Hello(const char* text)
 {
-  Hello("how do i do this shit in go");
-
-  return 0;
+   printf("Hello! %s\n", text);
 }

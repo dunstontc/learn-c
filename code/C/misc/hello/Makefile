@@ -1,13 +1,8 @@
-# BUILD_DIR := ./bin
-# MAIN := hello
+# Compile hello.c & main.c
+main:
+	gcc main.c hello.c -o ./out/main
 
-# build:
-# 	gcc ./$(MAIN).c -o $(BUILD_DIR)/$(MAIN)
+# Clean out ./out/*
+clean:
+	rm ./out/**
 
-# run:
-# 	@$(BUILD_DIR)/$(MAIN)
-
-# clean:
-# 	rm ./bin/*
-
-# .PHONY: clean build run
