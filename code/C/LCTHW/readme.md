@@ -211,6 +211,7 @@
 ### Exercise 9: While-Loop and Boolean Expressions
 
 ### Exercise 10: Switch Statements
+- Vowel Detector
 
 ### Exercise 11: Arrays and Strings
 
@@ -264,3 +265,7 @@
 ### Exercise 39: String Algorithms
 
 ### Exercise 40: Binary Search Trees
+
+### Exercise 42: Stacks and Queues
+
+### Exercise 43: A Simple Statistics Engine

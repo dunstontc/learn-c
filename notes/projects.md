@@ -4,6 +4,8 @@
 ## C
 
 ### Libs
+- [andlabs/libui](https://github.com/andlabs/libui)
+  - Simple and portable (but not inflexible) GUI library in C that uses the native GUI technologies of each platform it supports.
 - [libuv/libuv](https://github.com/libuv/libuv)
   - libuv is a multi-platform support library with a focus on asynchronous I/O. It was primarily developed for use by Node.js, but it's also used by Luvit, Julia, pyuv, and others.
 - [Qix-/xopt](https://github.com/Qix-/xopt)
@@ -14,8 +16,6 @@
   - An easy to use, scalable and secure web application framework for writing web APIs in C.
 - [vurtun/nuklear](https://github.com/vurtun/nuklear)
   - A single-header ANSI C gui library.
-- [andlabs/libui](https://github.com/andlabs/libui)
-  - Simple and portable (but not inflexible) GUI library in C that uses the native GUI technologies of each platform it supports.
 - [antirez/sds](https://github.com/antirez/sds)
   - Simple Dynamic Strings library for C
 - [pjreddie/darknet](https://github.com/pjreddie/darknet)

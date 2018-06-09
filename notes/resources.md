@@ -20,6 +20,7 @@
 - [OpenBSD: Kernel source file style guide (KNF)](https://man.openbsd.org/style.9)
 
 ## Learn
+- [rby90/Project-Based-Tutorials-in-C](https://github.com/rby90/Project-Based-Tutorials-in-C)
 - [Build a RegEx Engine](https://www.cs.princeton.edu/courses/archive/spr09/cos333/beautiful.html  )
 - [Regular Expression Matching Can Be Simple And Fast ](https://swtch.com/~rsc/regexp/regexp1.html)
 - [Tutorial - Write a Shell in C](https://brennan.io/2015/01/16/write-a-shell-in-c/)
