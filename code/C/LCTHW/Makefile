@@ -1,6 +1,6 @@
 CFLAGS=-Wall
 
-all: ex1 ex3 ex7 ex8
+all: ex1 ex3 ex7 ex8 ex9 ex10 ex11
 
 # Exercise #1
 ex1:
@@ -16,6 +16,18 @@ ex7:
 
 # Exercise #8
 ex8:
+	gcc -Wall -g ./src/$@.c -o ./out/$@.o
+
+# Exercise #9
+ex9:
+	gcc -Wall -g ./src/$@.c -o ./out/$@.o
+
+# Exercise #10
+ex10:
+	gcc -Wall -g ./src/$@.c -o ./out/$@.o
+
+# Exercise #11
+ex11:
 	gcc -Wall -g ./src/$@.c -o ./out/$@.o
 
 # Clean compiled files
