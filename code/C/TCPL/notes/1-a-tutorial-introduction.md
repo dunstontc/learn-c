@@ -1,7 +1,28 @@
-# CHAPTER 1: A Tutorial Introduction
+# Chapter 1: A Tutorial Introduction
+
+<!-- TOC -->
+
+- [1.1 Getting Started](#11-getting-started)
+- [1.2 Variables and Arithmetic Expressions](#12-variables-and-arithmetic-expressions)
+- [1.3 The For Statement](#13-the-for-statement)
+- [1.4 Symbolic Constants](#14-symbolic-constants)
+- [1.5 Character Input and Output](#15-character-input-and-output)
+  - [1.5.1 File Copying](#151-file-copying)
+  - [1.5.2 Character Counting](#152-character-counting)
+  - [1.5.3 Line Counting](#153-line-counting)
+  - [1.5.4 Word Counting](#154-word-counting)
+- [1.6 Arrays](#16-arrays)
+- [1.7 Functions](#17-functions)
+- [1.8 Arguments-Call by Value](#18-arguments-call-by-value)
+- [1.9 Character Arrays](#19-character-arrays)
+- [1.10 External Variables and Scope](#110-external-variables-and-scope)
+
+<!-- /TOC -->
 
 Let us begin with a quick introduction to C. Our aim is to show the essential elements of the language in real programs, but without getting bogged down in details, rules, and exceptions. At this point, we are not trying to be complete or even precise (save that the examples are meant to be correct). We want to get you as quickly as possible to the point where you can write useful programs, and to do that we have to concentrate on the basics: variables and constants, arithmetic, control flow, functions, and the rudiments of input and output. We are intentionally leaving out of this chapter features of C that are important for writing bigger programs. These include pointers, structures, most of C's rich set of operators, several control-flow statements, and the standard library.  
+
 This approach has its drawbacks. Most notable is that the complete story on any particular language feature is not found here, and the tutorial, by being brief, may also be misleading. And because the examples do not use the full power of C, they are not as concise and elegant as they might be. We have tried to minimize these effects, but be warned. Another drawback is that later chapters will necessarily repeat some of this chapter. We hope that the repetition will help you more than it annoys.  
+
 In any case, experienced programmers should be able to extrapolate from the material in this chapter 'to their own programming needs. Beginners should supplement it by writing small, similar programs of their own. Both groups can use it as a framework on which to hang the more detailed descriptions that begin in Chapter 2.  
 
 
@@ -244,14 +265,14 @@ The `printf` conversion specification `%3.Of` says that a floating-point number 
 
 Width and precision may be omitted from a specification: `%6f` says that the number is to be at least six characters wide; `%.2f` specifies two characters after the decimal point, but the width is not constrained; and `%f` merely says to print the number as floating point.
 
-| input |                              output                              |
-| ----- | ---------------------------------------------------------------- |
-| %d    | print as decimal integer                                         |
-| %6d   | print as decimal integer, at least 6 characters wide             |
-| %f    | print as floating point                                          |
-| %6f   | print as floating point, at least 6 characters wide              |
-| %.2f  | print as floating point, 2characters after decimal point         |
-| %6.2f | print as floating point, at least 6wide and 2after decimal point |
+|  input  |                              output                              |
+| ------- | ---------------------------------------------------------------- |
+| `%d`    | print as decimal integer                                         |
+| `%6d`   | print as decimal integer, at least 6 characters wide             |
+| `%f`    | print as floating point                                          |
+| `%6f`   | print as floating point, at least 6 characters wide              |
+| `%.2f`  | print as floating point, 2characters after decimal point         |
+| `%6.2f` | print as floating point, at least 6wide and 2after decimal point |
 
 Among others, `printf` also recognizes `%0` for octal, `%x` for hexadecimal, `%c`  for character, `%s` for character string, and `%%` for `%` itself.
 
@@ -263,3 +284,25 @@ Among others, `printf` also recognizes `%0` for octal, `%x` for hexadecimal, `%c
 
 ## 1.3 The For Statement
 
+
+## 1.4 Symbolic Constants
+
+## 1.5 Character Input and Output
+
+### 1.5.1 File Copying
+
+### 1.5.2 Character Counting
+
+### 1.5.3 Line Counting
+
+### 1.5.4 Word Counting
+
+## 1.6 Arrays
+
+## 1.7 Functions
+
+## 1.8 Arguments-Call by Value
+
+## 1.9 Character Arrays
+
+## 1.10 External Variables and Scope
