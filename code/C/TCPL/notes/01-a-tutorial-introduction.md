@@ -284,10 +284,86 @@ Among others, `printf` also recognizes `%0` for octal, `%x` for hexadecimal, `%c
 
 ## 1.3 The For Statement
 
+There are plenty of different ways to write a program for a particular task. Let's try a variation on the temperature converter.
+```c
+#include <stdio.h>
+
+/* print Fahrenheit-Celsius table */
+main()
+{
+  int fahr;
+  
+  for(fahr = 0; fahr < 300; fahr = (fahr + 20)) {
+    printf("%3d %6.1f\n", fahr, ((5.0/9.0)*(fahr-32))
+  }
+  
+}
+```
+This produces the same answers, but it certainly looks different. One major change is the elimination of most of the variables; only fahr remains, and we have made it an into The lower and upper limits and the step size appear only as constants in the for statement, itself a new construction, and the expression that computes the Celsius temperature now appears as the third argument of printf instead of as a separate assignment statement.  
+This last change is an instance of a general rule; in any context where it is permissible to use the value of a variable of some type, you can use a more complicated expression of that type. Since the third argument of `printf` must be a floating-point value to match the `%6.1f`, any floating-point expression can occur there.
+The `for` statement is a loop, a generalization of the `while`. If you compare it to the earlier `while`, its operation should be clear. Within the parentheses, there are three parts, separated by semicolons. The first part, the *initialization*
+```c
+  fahr = 0
+```
+is done once, before the loop is entered. The second part is the test or *condition* that controls the loop
+```c
+  fahr <= 300
+```
+This condition is evaluated; if it is true, the body of the loop (here a single `printf`) is executed. Then the *increment* step  
+```c
+  fahr = fahr + 20
+```
+is executed, and the condition re-evaluated. The loop terminates if the condition has become false. As with the `while`, the body of the loop can be a single statement, or a group of statements enclosed in braces. The *initialization*, *condition*, and *increment* can be any expressions.  
+
+The choice between `while` and `for` is arbitrary, based on which seems clearer. The `for` is usually appropriate for loops in which the initialization and increment are single statements and logically related, since it is more compact than `while` and it keeps the loop control statements together in one place.  
+
+### Exercises
+- **Exercise 1.5**: Modify the temperature conversion program to print the table in reverse order, that is, from 300 degrees to O.
+
 
 ## 1.4 Symbolic Constants
 
+A final observation before we leave temperature conversion forever. It's bad practice to bury "magic numbers" like 300 and 20 in a program; they convey little information to someone who might have to read the program later, and they are hard to change In a systematic way. One way to deal with magic numbers is to give them meaningful names. A `#define` line defines a *symbolic name* or *symbolic constant* to be a particular string of characters:  
+```c
+  #define name replacement text
+```
+Thereafter, any occurrence of `name` (not in quotes and not part of another name) will be replaced by the corresponding *replacement text*. The name has the same form as a variable name: a sequence of letters and digits that begins with a letter. The *replacement text* can be any sequence of characters; it is not limited to numbers.  
+```c
+#include <stdio.h>
+
+#define LOWER 0     // lower limit of table
+#define UPPER 300   // upper limit
+#define STEP  20    // step size
+
+/* print Fahrenheit-Celsius table */
+int main() {
+    int fahr;
+
+    for (fahr = LOWER; fahr <= UPPER; fahr = fahr + STEP) {
+        printf("%3d %6.1f\n", fahr, (5.0/9.0)*(fahr-32));
+    }
+}
+```
+The quantities `LOWER`, `UPPER` and `STEP` are symbolic constants, not variables, so they do not appear in declarations. Symbolic constant names are conventionally written in upper case so they can be readily distinguished from lower case variable names. Notice that there is no semicolonat the end of a `#define` line.
+
+
 ## 1.5 Character Input and Output
+
+We are now going to consider a family of related programs for processing character data. You will find that many programs are just expanded versions of the prototypes that we discuss here.  
+
+The model of input and output supported by the standard library is very simple. Text input or output, regardless of where it originates or where it goes to, is dealt with as streams of characters. A *text stream* is a sequence of characters divided into lines; each line consists of zero or more characters followed by a newline character. It is the responsibility of the library to make each input or output stream conform to this model; the C programmer using the library need not worry about how lines are represented outside the program.  
+
+The standard library provides several functions for reading or writing one character at a time, of which `getchar` and `putchar` are the simplest. Each time it is called, `getchar` reads the *next input character* from a text stream and returns that as its value. That is, after
+```c
+  c = getchar()
+```
+the variable `c` contains the next character of input. The characters normally come from the keyboard; input from files is discussed in Chapter 7.
+
+The function `putchar` prints a character each time it is called:
+```c
+  putchar(c)
+```
+prints the contents of the integer variable `c` as a character, usually on the screen. Calls to `putchar` and `printf` may be interleaved; the output will appear in the order in which the calls are made.
 
 ### 1.5.1 File Copying
 
