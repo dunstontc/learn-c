@@ -135,7 +135,8 @@ int main()
 
     fahrenheit = lower;
 
-    while(fahrenheit <= upper) {
+    while (fahrenheit <= upper) 
+    {
         celsius = (5 * (fahrenheit-32) / 9);
         printf("%d\t%d\n", fahrenheit, celsius);
         fahrenheit = fahrenheit + step;
@@ -177,7 +178,8 @@ Computation in the temperature conversion program begins with the assignment sta
 which set the variables to their initial values. Individual statements are terminated by semicolons.  
 Each line of the table is computed the same way, so we use a loop that repeats once per output line; this is the purpose of the `while` loop  
 ```c
-    while(fahrenheit <= upper) {
+    while (fahrenheit <= upper) 
+    {
         // ...
     }
 ```
@@ -185,7 +187,7 @@ Each line of the table is computed the same way, so we use a loop that repeats o
 The `while` loop operates as follows: The condition in parentheses is tested. If it is true (`fahr` is less than or equal to `upper`), the body of the loop (the three statements enclosed in braces) is executed. Then the condition is re-tested, and if true, the body is executed again. When the test becomes false (`fahr` exceeds `upper`) the loop ends, and execution continues at the statement that follows the loop. There are no further statements in this program, so it terminates.  
 The body of a `while` can be one or more statements enclosed in braces, as in the temperature converter, or a single statement without braces, as in  
 ```c
-  while(i < j)
+  while (i < j)
       i = 2 * i;
 ```
 In either case, we will always indent the statements controlled by the `while` by one tab stop (which we have shown as four spaces) so you can see at a glance which statements are inside the loop. The indentation emphasizes the logical structure of the program. Although C compilers do not care about how a program looks, proper indentation and spacing are critical in making programs easy for people to read. We recommend writing only one statement per line, and using blanks around operators to clarify grouping. The position of braces is less important, although people hold passionate beliefs. We have chosen one of several popular styles. Pick a style that suits you, then use it consistently.  
@@ -235,7 +237,8 @@ int main()
 
     fahrenheit = start_num;
 
-    while(fahrenheit <= end_num) {
+    while (fahrenheit <= end_num) 
+    {
         celsius = (5.0/9.0) * (fahrenheit-32.0);
         printf("%3.0f\t%6.1f\n", fahrenheit, celsius);
         fahrenheit = fahrenheit + current_step;
@@ -292,7 +295,8 @@ main()
 {
     int fahr;
   
-    for(fahr = 0; fahr < 300; fahr = (fahr + 20)) {
+    for (fahr = 0; fahr < 300; fahr = (fahr + 20)) 
+    {
         printf("%3d %6.1f\n", fahr, ((5.0/9.0)*(fahr-32))
     }
   
@@ -338,7 +342,8 @@ Thereafter, any occurrence of `name` (not in quotes and not part of another name
 int main() {
     int fahr;
 
-    for (fahr = LOWER; fahr <= UPPER; fahr = fahr + STEP) {
+    for (fahr = LOWER; fahr <= UPPER; fahr = fahr + STEP) 
+    {
         printf("%3d %6.1f\n", fahr, (5.0/9.0)*(fahr-32));
     }
 }
@@ -384,7 +389,8 @@ main()
 
     c = getchar();
 
-    while(c != EOF) {
+    while (c != EOF) 
+    {
         putchar(c);
         c = getchar();
     }
@@ -408,7 +414,8 @@ main()
 {
     int c;
 
-    while((c = getchar()) != EOF) {
+    while ((c = getchar()) != EOF) 
+    {
         putchar(c);
     }
 }
@@ -443,7 +450,8 @@ main()
 
     nc = 0;
     
-    while(getchar() != EOF) {
+    while (getchar() != EOF) 
+    {
         ++nc;
     }
     printf("%1d\n", nc);
@@ -465,7 +473,8 @@ main()
 {
     double nc;
 
-    for (nc = 0; getchar() != EOF; ++nc) {
+    for (nc = 0; getchar() != EOF; ++nc) 
+    {
         ;
     }
     printf("%.0f\n", nc);
@@ -488,7 +497,8 @@ main()
 
     nl = 0;
 
-    while ((c = getchar()) != EOF) {
+    while ((c = getchar()) != EOF) 
+    {
         if (c == '\n') {
             ++nl;
         }
@@ -522,14 +532,18 @@ main()
     state = OUT;
     nl = nw = nc = 0;
 
-    while ((c = getchar()) != EOF) {
-        if (c == '\n') {
+    while ((c = getchar()) != EOF) 
+    {
+        if (c == '\n') 
+        {
             ++nl;
         }
-        if (c == ' ' || c == '\n' || c == '\t') {
+        if (c == ' ' || c == '\n' || c == '\t') 
+        {
           state = OUT;
         }
-        else if (state == OUT) {
+        else if (state == OUT) 
+        {
           state = IN;
           ++nw;
         }
@@ -581,24 +595,30 @@ main()
 
     nwhite = nother = 0;
 
-    for (i = 0; i < 10; ++i) {
+    for (i = 0; i < 10; ++i) 
+    {
         ndigit[i] = 0;
     }
 
-    while ((c = getchar()) != EOF) {
-        if (c >= '0' && c <= '9') {
+    while ((c = getchar()) != EOF) 
+    {
+        if (c >= '0' && c <= '9') 
+        {
             ++ndigit[c-'O'];
         }
-        else if (c == ' ' ||  c == '\n' || c == '\t') {
+        else if (c == ' ' ||  c == '\n' || c == '\t') 
+        {
             ++nwhite; 
         }
-        else {
+        else 
+        {
             ++nother;
         }
     } 
 
     printf("digits =");
-    for (i = 0; i < 10; ++i) {
+    for (i = 0; i < 10; ++i) 
+    {
         printf(" %d", ndigit[i]);
     }
     printf(", white space = %d, other = %d\n", nwhite, nother);
