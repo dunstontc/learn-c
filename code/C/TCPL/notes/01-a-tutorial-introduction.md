@@ -211,12 +211,12 @@ For instance, we might say
 ```
 to print the first number of each line in a field three digits wide, and the second in a field six digits wide, like this:  
 ```
-0	   -17
-20    -6
-40     4
-60    15
-80    26
-100   37
+0		-17
+20		-6
+40		4
+60		15
+80		26
+100		37
 ```
 
 The more serious problem is that because we have used integer arithmetic, the Celsius temperatures are not very accurate; for instance, 0°F is actually about -17.8° C, not -17°. To get more accurate answers, we should use floating-point arithmetic instead of integer. This requires some changes in the program. Here is a second version:  

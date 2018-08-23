@@ -2,6 +2,9 @@
 
 ## Outline
 
+- Preface
+- Preface to the First Edition
+- Introduction
 1. A Tutorial Introduction
 2. Types, Operators, and Expressions
 3. Control Flow
