@@ -206,7 +206,7 @@ By the way, `printf` is not part of the C language; there is no input or output 
 In order to concentrate on C itself, we won't talk much about input and output until Chapter 7. In particular, we will defer formatted input until then. If you have to input numbers, read the discussion of the function `scanf` in Section 7.4. `scanf` is like `printf`, except that it reads input instead of writing output.  
 
 
-There are a couple of problems with the temperature conversion program. The simpler one is that the output isn't very pretty because the numbers are not right-justified.That'seasytofix;ifweaugmenteach"dintheprintf state- ment with a width, the numbers printed will be right-justified in their fields.  
+There are a couple of problems with the temperature conversion program. The simpler one is that the output isn't very pretty because the numbers are not right-justified.That'seasytofix;ifweaugmenteach"dintheprintf statement with a width, the numbers printed will be right-justified in their fields.  
 For instance, we might say  
 ```c
   printf("%3d  %6d\n", fahr, celsius);
@@ -636,7 +636,7 @@ The declaration
 ```
 declares `ndigit` to be an array of 10 integers. Array subscripts always start at zero in C, so the elements are `ndigit[0], ndigit[1], ..., ndigit[9]`. This is reflected in the `for` loops that initialize and print the array.  
 A subscript can be any integer expression, which includes integer variables like `i`, and integer constants.  
-This particular program relies on the properties of the character representa- tion of the digits. For example, the test  
+This particular program relies on the properties of the character representation of the digits. For example, the test  
 ```c
     if (c >= '0' && c <= '9') ...
 ```
@@ -647,6 +647,44 @@ determines whether the character in `c` is a digit. If it is, the numeric value 
 This works only if `'0'`, `'1'`, ..., `'9'` have consecutive increasing values. Fortunately, this is true for all character sets.
 
 By definition, `char`s are just small integers, so `char` variables and constants are identical to `ints` in arithmetic expressions. This is natural and convenient; for example, `c - '0'` is an integer expression with a value between `0` and `9` corresponding to the character `'0'` to `'9'` stored in `c`, and is thus a valid subscript for the array `ndigit`.
+
+The decision as to whether a character is a digit, white space, or something else is made with the sequence
+```c
+    if (c >= '0' && c <= '9') {
+        ++ndigit[c-'O'];
+    } else if (c == ' ' ||  c == '\n' || c == '\t') {
+        ++nwhite; 
+    } else {
+        ++nother;
+    }
+```
+The pattern
+```
+    if (condition1) 
+        statement1
+    else if (condition2)
+        statement 2
+    ...
+        ...
+    else
+        statement n;
+```
+occurs frequently in programs as a way to express a multi-way decision. The *conditions* are evaluated in order from the top until some *condition* is satisfied; at that point the corresponding *statement* part is executed, and the entire construction is finished. (Any *statement* can be several statements enclosed in braces.) If none of the conditions is satisfied, the *statement* after the final else is executed if it is present. If the final else and statement are omitted, as in the word count program, no action takes place. There can be any number of
+```
+    else if (condition) {
+        statement
+    }
+```
+groups between the initial `if` and the final `else`.  
+
+As a matter of style, it is advisable to format this construction as we have shown; if each `if` were indented past the previous `else`, a long sequence of decisions would march off the right side of the page.  
+
+The `switch` statement, to be discussed in Chapter 3, provides another way to write a multi-way branch that is particularly suitable when the condition is whether some integer or character expression matches one of a set of constants. For contrast, we will present a `switch` versionof this program in Section 3.4.  
+
+#### Exercises
+- **Exercise 1.13**: Write a program to print a histogram of the lengths of words in its input. It is easy to draw the histogram with the bars horizontal; a vertical orientation is more challenging.
+- **Exercise 1.14**: Write a program to print a histogram of the frequencies of different characters in its input.
+
 
 ## 1.7 Functions
 
