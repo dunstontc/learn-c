@@ -384,7 +384,6 @@ main()
 
     c = getchar();
 
-  
     while(c != EOF) {
         putchar(c);
         c = getchar();
@@ -434,17 +433,149 @@ This has the undesired effect of setting `c` to `0` or `1`, depending on whether
 
 ### 1.5.2 Character Counting
 The next program counts characters; it is similar to the copy program.  
+```c
+#include <stdio.h>
+
+// count characters in input; 1st version
+main()
+{
+    long nc;
+
+    nc = 0;
+    
+    while(getchar() != EOF) {
+        ++nc;
+    }
+    printf("%1d\n", nc);
+    
+}
+```
+The statement
+```c
+    ++nc;
+```
+presents a new operator, `++`, which means *increment by one*. You could instead write `nc = nc+1` but `++nc` is more conciseand often more efficient. There is a correspondingoperator `--` to decrement by 1. The operators `++` and `--` can be either *prefix* operators (`++nc`) or *postfix* (`nc++`); these two forms have different values in expressions, as will be shown in Chapter 2, but `++nc` and `nc++` both increment `nc`. For the moment we will stick to the prefix form.  
+The character counting program accumulates its count in a long variable instead of an into `long` integers are at least 32 bits. Although on some machines, `int` and `long` are the same size, on others an int is 16 bits, with a maximum value of 32767, and it would take relatively little input to overflow an `int` counter. The conversion specification `%1d` tells `printf` that the corresponding argument is a `long` integer.  
+It may be possible to cope with even bigger numbers by using a `double` (double precision `float`). We will also use a `for` statement instead of a `while`, to illustrate another way to write the loop.
+```c
+#include <stdio.h>
+
+// count characters in input; 2nd version
+main()
+{
+    double nc;
+
+    for (nc = 0; getchar() != EOF; ++nc) {
+        ;
+    }
+    printf("%.0f\n", nc);
+}
+```
+`printf` uses `%f` for both `float` and `double`; `%.Of` suppresses printing of the decimal point and the fraction part, which is zero.  
+The body of this `for` loop is empty, because all of the work is done in the test and increment parts. But the grammatical rules of C require that a `for` statement have a body. The isolated semicolon, called a *null statement*, is there to satisfy that requirement. We put it on a separate line to make it visible.  
+Before we leave the character counting program, observe that if the input contains no characters, the `while` or `for` test fails on the very first call to `getchar`, and the program produces zero, the right answer. This is important. One of the nice things about `while` and `for` is that they test at the top of the loop, before proceeding with the body. If there is nothing to do, nothing is done, even if that means never going through the loop body. Programs should act intelligently when given zero-length input. The `while` and `for` statements help ensure that programs do reasonable things with boundary conditions.  
+
 
 ### 1.5.3 Line Counting
+The next program counts input lines. As we mentioned above, the standard library ensures that an input text stream appears as a sequence of lines, each terminated by a newline. Hence, counting lines is just counting newlines:
+```c
+#include <stdio.h>
+
+// count lines in input
+main()
+{
+    int c, nl;
+
+    nl = 0;
+
+    while ((c = getchar()) != EOF) {
+        if (c == '\n') {
+            ++nl;
+        }
+    }
+
+    printf("%d\n", nl);
+}
+```
+The body of the while now consists of an `if`, which in turn controls the increment `++nl`. The `if` statement tests the parenthesized condition, and if the condition is true, executes the statement (or group of statements in braces) that follows. We have again indented to show what is controlled by what.  
+The double equals sign `==` is the C notation for "is equal to" (like Pascal's single `=` or Fortran's `.EQ.`). This symbol is used to distinguish the equality test from the single `=` that C uses for assignment. A word of caution: newcomers to C occasionally write `=` when they mean `==`. As we will see in Chapter 2, the result is usually a legal expression, so you will get no warning.   
+A character written between single quotes represents an integer value equal to the numerical value of the character in the machine's character set. This is called a *character constant*, although it is just another way to write a small integer. So, for example, `'A'` is a character constant; in the ASCII character set its value is `65`, the internal representation of the character A. Of course `'A'` is to be preferred over `65`: its meaning is obvious, and it is independent of a particular character set.   
+The escape sequences used in string constants are also legal in character constants, so `'\n'` stands for the value of the newline character, which is `10` in ASCII. You should note carefully that `'\n'` is a single character, and in expressions is just an integer; on the other hand, `"\n"` is a string constant that happens to contain only one character. The topic of strings versus characters is discussed further in Chapter 2.  
+
+#### Exercises
+- **Exercise 1.8**: Write a program to count blanks, tabs, and newlines.
+- **Exercise 1.9**: Write a program to copy its input to its output, replacing each string of one or more blanks by a single blank
+- **Exercise 1.10**: Write a program to copy its input to its output, replacing each tab by `\t`, each backspace by `\b`, and each backslash by `\\`. This makes tabs and backspaces visible in an unambiguous way.
+
 
 ### 1.5.4 Word Counting
 
+The fourth in our series of useful programs counts lines, words, and characters, with the loose definition that a word is any sequence of characters that does not contain a blank, tab or newline. This is a bare-bones version of the UNIX program `wc`.  
+```c
+#include <stdio.h>
+
+// count lines in input
+main()
+{
+    int c, nl, nw, nc, state;
+
+    state = OUT;
+    nl = nw = nc = 0;
+
+    while ((c = getchar()) != EOF) {
+        if (c == '\n') {
+            ++nl;
+        }
+        if (c == ' ' || c == '\n' || c == '\t') {
+          state = OUT;
+        }
+        else if (state == OUT) {
+          state = IN;
+          ++nw;
+        }
+    }
+    printf("%d %d %d\n", nl, nw, nc);
+}
+```
+Every time the program encounters the first character of a word, it counts one more word. The variable `state` records whether the program is currently in a word or not; iriitially it is "not in a word," which is assigned the value `OUT`. We prefer the symbolic constants `IN` and `OUT` to the literal values `1` and `0` because they make the program more readable. In a program as tiny as this, it makes little difference, but in larger programs, the increase in clarity is well worth the modest extra effort to write it this way from the beginning. You'll also find that it's easier to make extensive changes in programs where magic numbers appear only as symbolic constants.  
+The line
+```c
+    nl = nw = nc = 0;
+```
+sets all three variables to zero. This is not a special case, but a consequence of the fact that an assignment is an expression with a value and assignments associate from right to left. It's as if we had written  
+```c
+    nl = (nw = (nc =0));
+```
+
+The operator `||` means `OR`, so the line
+```c
+    if (c == ' ' || c == '\n' || c == '\t')
+```
+says "if c is a blank *or* c is a newline *or* c is a tab". (Recall that the escape sequence `\t` is a visible representation of the tab character.) There is a corresponding operator `&&` for `AND`; its precedence is just higher than `||`. Expressions connected by `&&` or `||` are evaluated left to right, and it is guaranteed that evaluation will stop as soon as the truth or falsehood is known. If `c` is a blank, there is no need to test whether it is a newline or tab, so these tests are not made. This isn't particularly important here, but is significant in more complicated situations, as we will soon see.  
+The example also shows an `else`, which specifies an alternative action if the condition part of an `if` statement is false. The general form is  
+```c
+    if (expression) 
+        // statement 1
+    else 
+        // statement 2
+```
+One and only one of the two statements associated with an `if-else` formed. If the expression is true, *statement 1* is executed; if not, *statement 2* is executed. Each statement can be a single statement or several in braces. In the word count program, the one after the `else` is an `if` that controls two statements in braces.
+
+#### Exercises
+- **Exercise 1.11**: How would you test the word count program? What kinds of input are most likely to uncover bugs if there are any?
+- **Exercise 1.12**: Write a program that prints its input one word per line.
+
+
 ## 1.6 Arrays
+
 
 ## 1.7 Functions
 
+
 ## 1.8 Arguments-Call by Value
 
+
 ## 1.9 Character Arrays
+
 
 ## 1.10 External Variables and Scope
