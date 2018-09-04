@@ -16,7 +16,7 @@ As we said in the preface to the first edition, C "wears well as one's experienc
 
 We are deeply indebted to friends who helped us to produce this second edition. Jon Bentley, Doug Gwyn, Doug Mcllroy, Peter Nelson, and Rob Pike gave us perceptive comments on almost every page of draft manuscripts. We are grateful for careful reading by Al Aho, Dennis Allison, Joe Campbell, G. R. Emlin, Karen Fortgang, Allen Holub, Andrew Hume, Dave Kristol, John Linderman, Dave Prosser, Gene Spafford, and Chris Van Wyk. We also received helpful suggestions from BHl Cheswick, Mark Kernighan, Andy Koenig, Robin Lake, Tom London, Jim Reeds, Clovis Tondo, and Peter Wein- berger. Dave Prosser answered many detailed questions about the ANSI stand- ard. We used Bjarne Stroustrup's C++ translator extensively for local testing of our programs, and Pave Kristol provided us with an ANSI C compiler for final testing, Rich Drechsler helped greatly with typesetting.  
 
-Our sincerethanks to all.  
+Our sincere thanks to all.  
 
 
 Brian W. Kernighan  

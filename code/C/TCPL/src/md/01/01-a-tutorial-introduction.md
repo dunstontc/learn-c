@@ -689,7 +689,7 @@ The `switch` statement, to be discussed in Chapter 3, provides another way to wr
 ## 1.7 Functions
 
 
-## 1.8 Arguments-Call by Value
+## 1.8 Arguments; Call by Value
 
 
 ## 1.9 Character Arrays
