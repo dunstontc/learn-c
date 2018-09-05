@@ -154,10 +154,10 @@
 - **Exercise 1.12**: Write a program that prints its input one word per line.
 - **Exercise 1.13**: Write a program to print a histogram of the lengths of words in its input. It is easy to draw the histogram with the bars horizontal; a vertical orientation is more challenging.
 - **Exercise 1.14**: Write a program to print a histogram of the frequencies of different characters in its input.
-
+- **Exercise 1-16**: Revise the `main` routine of the longest-line program so it will correctly print the length of arbitrarily long input lines, and as much as possible of the text.
 - **Exercise 1.17**: Write a program to print all input lines that are longer than 80 characters.
 - **Exercise 1.18**: Write a program to remove trailing blanks and tabs from each line of input, and to delete entirely blank lines.
-- **Exercise 1.19**: Write a function reverse (s) that reverses the character strings. Use it to write a program that reverses its input a line at a time.
+- **Exercise 1.19**: Write a function `reverse(s)` that reverses the character string `s`. Use it to write a program that reverses its input a line at a time.
 - **Exercise 1.20**: Write a program detab that replaces tabs in the input with the proper number of blanks to space to the next tab stop. Assume a fixed set of tab stops, say every n columns. Should n be a variable or a symbolic parameter?
 - **Exercise 1.21**: Write a program entab that replaces strings of blanks by the minimum number of tabs and blanks to achieve the same spacing. Use the sametabstopsasfordetab. Wheneitherataborasingleblankwouldsuffice to reach a tab stop, which should be given preference?
 - **Exercise 1.22**: Write a program to "fold" long input lines into two or more shorter lines after the last non-blank character that occurs before the n-th column of input. Make sure your program does something intelligent with very long lines, and if there are no blanks or tabs before the specified column.
