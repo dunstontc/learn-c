@@ -285,8 +285,38 @@ As we discussed in Chapter 1, the expression
 gives the numeric value of the character stored in `s[i]`, because the values of `'0'`, `'1'`, etc., form a contiguous increasing sequence.
 
 Another example of `char` to `int` conversion is the function `lower`, which maps a single character to lower case for *the ASCII character set*. If the character is not an upper case letter, `lower` returns it unchanged.
+```c
+/* lower: convert c to lower case; ASCII only */
+int lower(int c)
+{
+    if (c >= 'A' && c <= 'Z')
+        return c + 'a' - 'A';
+    else
+        return c;
+}
+```
+This works for ASCII because corresponding upper case and lower case letters are a fixed distance apart as numeric values and each alphabet is contiguous; there is nothing but letters between A and Z. This latter observation is not true of the EBCDIC character set, however, so this code would convert more than just letters in EBCDIC.
 
+The standard header `<ctype.h>`, described in Appendix B, defines a family
+of functions that provide tests and conversions that are independent of character set. For example, the function `tolower(c)` returns the lower case value of `c` if `c` is upper case, so `tolower` is a portable replacement for the function `lower` shown above. Similarly, the test
+```c
+      if (c >= '0' && c <= '9')
+```
+can be replaced by
+```c
+    isdigit(c)
+```
+We will use the `<ctype.h>` functions from now on.
 
+There is one subtle point about the conversionof characters to integers. The
+language does not specify whether variables of type char are signed or unsigned quantities. When a char is converted to an int, can it ever produce a negative integer? The answer varies from machine to machine, reflecting differences in architecture. On some machines a char whose leftmost bit is 1 will be converted to a negative integer ("sign extension"). On others, a char is promoted to an int by adding zeros at the left end, and thus is always positive.
+
+The definition of C guarantees that any character in the machine's standard printing character set will never be negative, so these characters will always be positive quantities in expressions. But arbitrary bit patterns stored in 'character variables may appear to be negative on some machines, yet positive on others. For portability, specify signed or unsigned if non-character data is to be stored in char variables.
+
+Relational expressions like `i > j` and logical expressions connected by `&&` and `||` are defined to have value `1` if true, and `0` if false. Thus the assignment
+```c
+
+```
 
 
 ## 2.8. Increment and Decrement Operators
@@ -345,7 +375,7 @@ The moral is that writing code that depends on order of evaluation is a bad prog
 | `^`                                                     | left to right |
 | `|`                                                     | left to right |
 | `&&`                                                    | left to right |
-| `||`                                                    | left to right |
+| `\|\|`                                                  | left to right |
 | `?:`                                                    | right to left |
 | `=` `+=` `-=` `*=` `/=` `%=` `&=` `^=` `|=` `<<=` `>>=` | right to left |
 | `,`                                                     | left to right |
