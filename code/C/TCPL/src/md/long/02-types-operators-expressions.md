@@ -315,11 +315,158 @@ The definition of C guarantees that any character in the machine's standard prin
 
 Relational expressions like `i > j` and logical expressions connected by `&&` and `||` are defined to have value `1` if true, and `0` if false. Thus the assignment
 ```c
-
+    d = c >= '0' && c <= '9'
 ```
+sets `d` to `1` if `c` is a digit, and `0` if not. However, functions like `isdigit` may return any non-zero value for true. In the test part of `if`, `while`, `for`, etc., *"true"* just means *"non-zero"*, so this makes no difference.
+
+Implicit arithmetic conversions work much as expected. In general, if an operator like `+` or `*` that takes two operands (a binary operator) has operands of different types, the "lower" type is *promoted* to the "higher" type before the operation proceeds. The result is of the higher type. Section 6 of Appendix A states the conversion rules precisely. If there are no unsigned operands, however, the following informal set of rules will suffice:
+- If either operand is `long double`, convert the other to `long double`. 
+- Otherwise, if either operand is `double`, convert the other to `double`. 
+- Otherwise, if either operand is `float`, convert the other to `float`. 
+- Otherwise, convert `char` and `short` to `int`.
+- Then, if either operand is `long`, convert the other to `long`.
+
+Notice that `float`s in an expression are not automatically converted to `double`; this is a change from the original definition. In general, mathematical functions like those in `<math.h>` will use double precision. The main reason for using `float` is to save storage in large arrays, or, less often, to save time on machines where double-precision arithmetic is particularly expensive.
+
+Conversion rules are more complicated when uns igned operands are involved. The problem is that comparisons between signed and unsigned values are "machine-dependent" because they depend on the sizes of the various integer types. For example, suppose that int is 16 bits and long is 32 bits. Then `-1L < 1U`, because `1U`, which is an `int`, is promoted to a `signed long`. But `-1L > 1UL`, because `-1L` is promoted to `unsigned long` and thus appears to be a large positive number.
+
+Conversions take place across assignments; the value of the right side is converted to the type of the left, which is the type of the result. 
+A character is converted to an integer, either by sign extension or not, as described above.
+
+Longer integers are converted to shorter ones or to `chars` excess high-order bits. Thus in
+```c
+    int i; 
+    char c;
+
+    i = c; 
+    c = i;
+```
+the value of `c` is unchanged. This is true whether or not sign extension is involved. Reversing the order of assignments might lose information, however.
+
+If `x` is `float` and `i` is `int`, then `x = i` and `i = x` both causeconversions; `float` to `int` causes truncation of any fractional part. When `double` is converted to `float`, whether the value is rounded or truncated is implementation-dependent.
+
+Since an argument of a function call is an expression, type conversions also take place when arguments are passed to functions. In the absence of a function prototype, `char` and `short` become `int`, and `float` becomes `double`. This is why we have declared function arguments to be `int` and `double` even when the function is called with `char` and `float`.
+
+Finally, explicit type conversions can be forced (*coerced*) in any expression, with a unary operator called a *cast*. In the construction:
+```c
+    (type) expression
+```
+the *expression* is converted to the named type by the conversion rules above. The precise meaning of a cast is as if the *expression* were assigned to a variable of the specified type, which is then used in place of the whole construction. For example, the library routine `sqrt` expects a `double` argument, and will produce nonsense if inadvertently handed something else. (`sqrt` is declared in `<math•h>`). So if `n` is an integer, we can use
+```c
+    sqrt((double) n)
+```
+to convert the value of `n` to `double` before passing it to `sqrt`. Note that the cast produces the *value* of `n` in the proper type; `n` itself is not altered. The cast operator has the same high precedence as other unary operators, as summarized in the table at the end of this chapter.
+
+If arguments are declared by a function prototype, as they normally should be, the declaration causes automatic coercion of any arguments when the function is called. Thus, given a function prototype for sqrt:
+```c
+    double sqrt(2);
+```
+the call
+```c
+    root2 = sqrt(2);
+```
+coerces the integer `2` into the `double` value `2.0` without any need for a cast.
+
+The standard library includes a portable implementation of a pseudo-random number generator and a function for initializing the seed; the former illustrates a cast:
+```c
+unsigned long int next = 1
+
+/* rand: return pseudo-random integer on 0..3276 */
+int rand(void)
+{
+    next = next * 1103515245 + 12345;
+    return (unsigned int)(next/65536) % 32768;
+}
+
+/* srand: set seed for rand() */
+void srand(unsigned int seed)
+{
+    next = seed;
+}
+```
+
+### Exercises
+- **Exercise 2.3**: Write the function `htoi(s)`, which converts a string of hexadecimal digits (including an optional `Ox` or `ox`) into its equivalent integer value. The allowable digits are `0` through `9`, `a` through `f`, and `A` through `F`.
 
 
 ## 2.8. Increment and Decrement Operators
+
+C provides two unusual operators for incrementing and decrementing variables. The *increment* operator `++` adds 1 to its operand, while the *decrement* operator `--` subtracts 1. We have frequently used `++` to increment variables, as in
+```c
+    if (c == '\n')
+```
+
+The unusual aspect is that `++` and `--` may be used either as prefix operators (before the variable, as in `++n`), or postfix (after the variable: `n++`). In both cases, the effect is to increment `n`. But the expression `++n` increments `n` *before* its value is used, while `n++` increments `n` *after* its value has been used. This means that in a context where the value is being used, not just the effect, `++n` and `n++` are different. If `n` is `5`, then
+```c
+    x = n++;
+```
+sets `x` to `5`, but
+```c
+    x = ++n;
+```
+sets `x` to `6`. In both cases, `n` becomes `6`. The increment and decrement operators can only be applied to variables; an expression like `(i+j)++` is illegal.
+
+In a context where no value is wanted, just the incrementing effect, as in
+```c
+    if (c == '\n')
+        nl++;
+```
+prefix and postfix are the same. But there are situations where one or the other is specifically called for. For instance, consider the function `squeeze(S, C)`, which removes all occurrences of the character `c` from the string `s`.
+```c
+/* squeeze: delete all c from s */
+void squeeze(char s[], int c)
+{
+    int i, j;
+
+    for (i = j = 0; s[i] 1 = '\0'; i++) 
+        if (s[i] 1 = c)
+            s[j++] = s[i]; 
+    s[j] = '\0';
+}
+```
+Each time a non-`c` occurs, it is copied into the current `j` position, and only then is `j` incremented to be ready for the next character. This is exactly equivalent to
+```c
+    if (s[i] 1 = c) { 
+        s[j] = s[i];
+        j++;
+    }
+```
+
+Another example of a similar construction comes from the `getine` function that we wrote in Chapter 1, where we can replace
+```c
+    if (c == '\n') { 
+        s[i] = c;
+        ++i;
+    }
+```
+with the more compact
+```c
+    if (c == '\n')  
+        s[i++] = c;
+```
+
+As a third example, consider the standard function `strcat(s, t)`, which concatenates the string `t` to the end of the string `s`. `strcat` assumes that there is enough space in `s` to hold the combination. As we have written it, `strcat` returns no value; the standard library version returns a pointer to the resulting string.
+```c
+/* strcat: concatenate t to end of s; s must be big enough */
+void strcat(char s[], char t[])
+{
+    int i, j;
+
+    i = j = 0;
+    while (s[i] 1= '\0') /* find end of s */
+        i++;
+    while ((s[i++] = t[j++]) 1= '\0') /* copy t */
+        ;
+}
+```
+As each character is copied from `t` to `s`, the postfix `++` is applied to both `i` and `j` to make sure that they are in position for the next pass through the loop.
+
+### Exercises
+- **Exercise 2.4**: Write an alternate version of `squeeze(s1, s2)` that deletes each character in `s1` that matches any character in the string `s2`.
+- **Exercise 2.5**: Write the function `any(s1, s2)`, which returns the first location in the string `s1` where any character from the string `s2` occurs, or `-1` if `s1` contains no characters from `s2`. (The standard library function `strpbrk` does the same job but returns a pointer to the location).
+
+
+
 ## 2.9. Bitwise Operators
 ## 2.10. Assignment Operators and Expressions
 ## 2.11. Conditional Expressions

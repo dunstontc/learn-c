@@ -659,15 +659,15 @@ The decision as to whether a character is a digit, white space, or something els
     }
 ```
 The pattern
-```
-    if (condition1) 
-        statement1
-    else if (condition2)
-        statement 2
+```c
+    if (condition_1) 
+        statement_1
+    else if (condition_2)
+        statement_2
     ...
         ...
     else
-        statement n;
+        statement_n;
 ```
 occurs frequently in programs as a way to express a multi-way decision. The *conditions* are evaluated in order from the top until some *condition* is satisfied; at that point the corresponding *statement* part is executed, and the entire construction is finished. (Any *statement* can be several statements enclosed in braces.) If none of the conditions is satisfied, the *statement* after the final else is executed if it is present. If the final else and statement are omitted, as in the word count program, no action takes place. There can be any number of
 ```
