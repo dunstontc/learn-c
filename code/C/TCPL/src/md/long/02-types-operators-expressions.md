@@ -466,19 +466,185 @@ As each character is copied from `t` to `s`, the postfix `++` is applied to both
 - **Exercise 2.5**: Write the function `any(s1, s2)`, which returns the first location in the string `s1` where any character from the string `s2` occurs, or `-1` if `s1` contains no characters from `s2`. (The standard library function `strpbrk` does the same job but returns a pointer to the location).
 
 
-
 ## 2.9. Bitwise Operators
+
+C provides six operators for bit manipulation; these may only be applied to integral operands, that is, `char`, `short`, `int`, and `long`, whether signed or unsigned.
+
+| operator |       description        |
+| :------: | ------------------------ |
+|   `&`    | bitwise AND              |
+|  &#124;  | bitwise inclusive OR     |
+|   `^`    | bitwise exclusive OR     |
+|   `<<`   | left shift               |
+|   `>>`   | right shift              |
+|   `-`    | one's complement (unary) |
+
+The bitwise AND operator `&` is often used to mask off some set of bits; for example,
+```c
+    n = n & 0177;
+```
+sets to zero all but the low-order 7 bits of `n`.
+
+The bitwise OR operator `|` is used to turn bits on:
+```c
+    x = x | SET_ON;
+```
+sets to one in `x` the bits that are set to one in `SET_ON`.
+
+The bitwise exclusive OR operator `^` sets a one in each bit position where its operands have different bits, and zero where they are the same.
+
+One must distinguish the bitwise operators `&` and `|` from the logical operators `&&` and `||`, which imply left-to-right evaluation of a truth value. For example, if `x` is `1` and `y` is `2`, then `x & y` is zero while `x && y` is one.
+
+The shift operators `<<` and `>>` perform left and right shifts of their left operand by the number of bit positions given by the right operand, which must be positive. Thus `x << 2` shifts the value of `x` left by two positions, filling vacated bits with zero; this is equivalent to multiplication by 4. Right shifting an unsigned quantity always fills vacated bits with zero. Right shifting a signed quantity will fill with sign bits ("arithmetic shift") on some machines and with O-bits ("logical shift") on others.
+
+The unary operator - yields the one's complement of an integer; that is, it converts each I-bit into a O-bit and vice versa. For example,
+```c
+    x = x & ~077
+```
+sets the last six bits of `x` to zero. Note that `x & ~077` is independent of word length, and is thus preferable to, for example, `x & 0177700`, which assumes that `x` is a 16-bit quantity. The portable form involves no extra cost, since `~077` is a constant expression that can be evaluated at compile time.
+
+As an illustration of some of the bit operators, consider the function `getbits(x, p, n)` that returns the (right adjusted) `n`-bit field of `x` that begins at position `p`. We assume that bit position `0` is at the right end and that nand `p` are sensible positive values. For example, `getbits(x, 4, 3)` returns the three bits in bit positions 4, 3 and 2, right adjusted.
+```c
+/* getbits: get n bits from position p */
+unsigned getbits(unsigned x, int p, int n)
+{
+    return (x >> (p+1-n)) & ~(~0 << n);
+}
+```
+The expression `x >> (p+1-n)` moves the desired field to the right end of the word. `~0` is all 1-bits; shifting it left `n` bit positions with `~0 << n` places zeros in the rightmost `n` bits; complementing that with ~ makes a mask with ones in the rightmost `n` bits.
+
+### Exercises
+- **Exercise 2.6**: Write a function `setbits(x, p, n, y)` that returns `x` with the `n` bits that begin at position `p` set to the rightmost `n` bits of `y`, leaving the other bits unchanged.
+- **Exercise 2.7**: Write a function `invert(x, p, n)` that returns `x` with the `n` bits that begin at position `p` inverted (i.e., I changed into 0 and vice versa), leaving the others unchanged.
+- **Exercise 2.8**: Write a function `rightrot(x, n)` that returns the value of the integer `x` rotated to the right by `n` bit positions.
+
+
 ## 2.10. Assignment Operators and Expressions
+
+Expressions such as
+```c
+    i = i + 2;
+```
+in which the variable on the left hand side is repeated immediately on the right, can be written in the compressed form
+```c
+    i += 2;
+```
+The operator `+=` is called an *assignment operator*.
+
+Most binary operators (operators like `+` that have a left and right operand) have a corresponding assignment operator `op=`, where *op* is one of
+- `+`
+- `-`
+- `*`
+- `/`
+- `%`
+- `<<`
+- `>>`
+- `&`
+- `^`
+- `|`
+
+
+If expr1 and expr2 are expressions, then
+```
+    expr1 op= expr2
+```
+is equivalent to
+```
+    expr1 = (expr1) op (expr2)
+```
+except that expr1 is computed only once. Notice the parentheses around expr2:
+```c
+    x *= y + 1;
+```
+means
+```c
+    x = x * (y + 1)
+```
+rather than
+```c
+    x = x * y + 1
+```
+As an example, the function `bitcount` counts the number of 1-bits in its integer argument.
+```c
+/* bitcount: count 1-bits in x */
+int bitcount(unsigned x)
+{
+    int b;
+
+    for (b = 0; x != 0; x >>= 1)
+        if (x & 01)
+            b++;
+    return b;
+}
+```
+Declaring the argument `x` to be `unsigned` ensures that when it is right-shifted, vacated bits will be filled with zeros, not sign bits, regardless of the machine the program is run on.
+
+Quite apart from conciseness, assignment operators have the advantage that they correspond better to the way people think. We say "add 2 to `i`" or "increment `i` by 2," not "take `i`, add 2, then put the result back in `i`." Thus the expression `i += 2` is preferable to `i = i + 2`. In addition, for a complicated expression like
+```c
+    yyval[yypv[p3+p4] + yypv[p1+p2]] += 2
+```
+the assignment operator makes the code easier to understand, since the reader doesn't have to check painstakingly that two long expressions are indeed the same, or to wonder why they're not. And an assignment operator may even help a compiler to produce efficient code.
+
+We have already seen that the assignment statement has a value and can occur in expressions; the most common example is
+```c
+    while ((c = getchar()) 1=EOF)
+        // ...
+```
+The other assignment operators (`+=`, `-=`, etc.) can also occur in expressions, although this is less frequent.
+
+In all such expressions, the type of an assignment expression is the type of its left operand, and the value is the value after the assignment.
+
+
+### Exercises
+- **Exercise 2.9**: In a two's complement number system, `x &= (x-1)` deletes the rightmost 1-bit in `x`. Explain why. Use this observation to write a faster version of `bitcount`.
+
+
 ## 2.11. Conditional Expressions
+
+The statements
+```c
+    if (a > b) 
+        z = a;
+    else
+        z = b;
+```
+compute in `z` the maximum of `a` and `b`. The conditional expression, written with the ternary operator `"?:"`,provides an alternate way to write this and similar constructions. In the expression
+```c
+    expr_1 ? expr_2 : expr_3;
+```
+the expression `expr_1` is evaluated first. If it is non-zero(true), then the expression `expr_2` is evaluated, and that is the value of the conditional expression. Otherwise `expr_3` is evaluated, and that is the value. Only one of `expr_2` and `expr_3` is evaluated. Thus to set `z` to the maximum of `a` and `b`,
+```c
+    z = (a > b) ? a : b; /* z = max(a, b) */
+```
+It should be noted that the conditional expression is indeed an expression, and it can be used wherever any other expression can be. If `expr_2` and `expr_3` are different types, the type of the result is determined by the conversion rules discussed earlier in this chapter. For example, if `f` is a `float` and `n` is an `int`, then the expression
+```c
+    (n > 0) ? f : n;
+```
+is of type `float` regardless of whether `n` is positive.
+
+Parentheses are not necessary around the first expression of a conditional expression, since the precedence of `? :`is very low, just above assignment. They are advisable anyway, however, since they make the condition part of the expression easier to see.
+
+The conditional expression often leads to succinct code. For example, this loop prints n elements of an array, 10 per line, with each column separated by one blank, and with each line (including the last) terminated by a newline.
+```c
+    for (i = 0; i < n; i++)
+        printf( "%6d%c", a[i], (i%10==9 || i==n-1) ? '\n' : ' ');
+```
+A newline is printed after every tenth element, and after the `n`th. All other elements are followed by one blank. This might look tricky, but it's more compact than the equivalent `if`-`else`. Another good example is
+```c
+    printf("You have %d item%s.\n", n, n==1 ? "" : "s");
+```
+
+### Exercises
+- **Exercise 2.10**: Rewrite the function `lower`, which converts upper case letters to lower case, with a conditional expression instead of `if`-`else`. 
 
 
 ## 2.12. Precedence and Order of Evaluation
 
-Table 2-1 summarizes the rules for precedence and associativity of all operators, including those that we have not yet discussed. Operators on the same line have the same precedence; rows are in order of decreasing precedence, so, for example, `*`, `|`, and `%` all have the same precedence, which is higher than that of binary `+` and `-.` The "operator" `()` refers to function call. The operators `->` and `.` are used to access members of structures; they will be covered in Chapter 6, along with `sizeof` (size of an object). Chapter 5 discusses `*` (indirection through a pointer) and `&`. (address of an object), and Chapter 3 discusses the comma operator.
+Table 2-1 summarizes the rules for precedence and associativity of all operators, including those that we have not yet discussed. Operators on the same line have the same precedence; rows are in order of decreasing precedence, so, for example, `*`, `|`, and `%` all have the same precedence, which is higher than that of binary `+` and `-.` The *operator* `()` refers to *function call*. The operators `->` and `.` are used to access members of structures; they will be covered in Chapter 6, along with `sizeof` (size of an object). Chapter 5 discusses `*` (indirection through a pointer) and `&`. (address of an object), and Chapter 3 discusses the comma operator.
 
 Note that the precedence of the bitwise operators `&`, `^`, and `|` falls below `==` and `!=`. This implies that bit-testing expressions like
 ```c
-    if ((x & MASK) == 0) ...
+    if ((x & MASK) == 0) // ...
 ```
 must be fully parenthesized to give proper results.
 
