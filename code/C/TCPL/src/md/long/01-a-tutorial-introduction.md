@@ -135,8 +135,7 @@ int main()
 
     fahrenheit = lower;
 
-    while (fahrenheit <= upper) 
-    {
+    while (fahrenheit <= upper) {
         celsius = (5 * (fahrenheit-32) / 9);
         printf("%d\t%d\n", fahrenheit, celsius);
         fahrenheit = fahrenheit + step;
@@ -237,8 +236,7 @@ int main()
 
     fahrenheit = start_num;
 
-    while (fahrenheit <= end_num) 
-    {
+    while (fahrenheit <= end_num) {
         celsius = (5.0/9.0) * (fahrenheit-32.0);
         printf("%3.0f\t%6.1f\n", fahrenheit, celsius);
         fahrenheit = fahrenheit + current_step;
@@ -295,10 +293,8 @@ main()
 {
     int fahr;
   
-    for (fahr = 0; fahr < 300; fahr = (fahr + 20)) 
-    {
+    for (fahr = 0; fahr < 300; fahr = (fahr + 20))
         printf("%3d %6.1f\n", fahr, ((5.0/9.0)*(fahr-32))
-    }
   
 }
 ```
@@ -339,11 +335,11 @@ Thereafter, any occurrence of `name` (not in quotes and not part of another name
 #define STEP  20    // step size
 
 /* print Fahrenheit-Celsius table */
-int main() {
+int main() 
+{
     int fahr;
 
-    for (fahr = LOWER; fahr <= UPPER; fahr = fahr + STEP) 
-    {
+    for (fahr = LOWER; fahr <= UPPER; fahr = fahr + STEP) {
         printf("%3d %6.1f\n", fahr, (5.0/9.0)*(fahr-32));
     }
 }
@@ -389,8 +385,7 @@ main()
 
     c = getchar();
 
-    while (c != EOF) 
-    {
+    while (c != EOF) {
         putchar(c);
         c = getchar();
     }
@@ -414,8 +409,7 @@ main()
 {
     int c;
 
-    while ((c = getchar()) != EOF) 
-    {
+    while ((c = getchar()) != EOF) {
         putchar(c);
     }
 }
@@ -450,8 +444,7 @@ main()
 
     nc = 0;
     
-    while (getchar() != EOF) 
-    {
+    while (getchar() != EOF) {
         ++nc;
     }
     printf("%1d\n", nc);
@@ -473,8 +466,7 @@ main()
 {
     double nc;
 
-    for (nc = 0; getchar() != EOF; ++nc) 
-    {
+    for (nc = 0; getchar() != EOF; ++nc) {
         ;
     }
     printf("%.0f\n", nc);
@@ -497,8 +489,7 @@ main()
 
     nl = 0;
 
-    while ((c = getchar()) != EOF) 
-    {
+    while ((c = getchar()) != EOF) {
         if (c == '\n') {
             ++nl;
         }
@@ -532,18 +523,14 @@ main()
     state = OUT;
     nl = nw = nc = 0;
 
-    while ((c = getchar()) != EOF) 
-    {
-        if (c == '\n') 
-        {
+    while ((c = getchar()) != EOF) {
+        if (c == '\n') {
             ++nl;
         }
-        if (c == ' ' || c == '\n' || c == '\t') 
-        {
+        if (c == ' ' || c == '\n' || c == '\t') {
           state = OUT;
         }
-        else if (state == OUT) 
-        {
+        else if (state == OUT) {
           state = IN;
           ++nw;
         }
@@ -595,23 +582,17 @@ main()
 
     nwhite = nother = 0;
 
-    for (i = 0; i < 10; ++i) 
-    {
+    for (i = 0; i < 10; ++i)
         ndigit[i] = 0;
-    }
 
-    while ((c = getchar()) != EOF) 
-    {
-        if (c >= '0' && c <= '9') 
-        {
+    while ((c = getchar()) != EOF) {
+        if (c >= '0' && c <= '9') {
             ++ndigit[c-'O'];
         }
-        else if (c == ' ' ||  c == '\n' || c == '\t') 
-        {
+        else if (c == ' ' ||  c == '\n' || c == '\t') {
             ++nwhite; 
         }
-        else 
-        {
+        else {
             ++nother;
         }
     } 
@@ -664,13 +645,13 @@ The pattern
         statement_1
     else if (condition_2)
         statement_2
-    ...
-        ...
+    // ...
+        // ...
     else
         statement_n;
 ```
 occurs frequently in programs as a way to express a multi-way decision. The *conditions* are evaluated in order from the top until some *condition* is satisfied; at that point the corresponding *statement* part is executed, and the entire construction is finished. (Any *statement* can be several statements enclosed in braces.) If none of the conditions is satisfied, the *statement* after the final else is executed if it is present. If the final else and statement are omitted, as in the word count program, no action takes place. There can be any number of
-```
+```c
     else if (condition) {
         statement
     }
@@ -698,7 +679,7 @@ Here is the function `power` and a main program to exercise it, so you can see t
 
 int power(int m, int n)
 
-/*test power function*/
+/* test power function */
 main()
 {
   int i;
@@ -723,9 +704,9 @@ A function definition has this form:
 ```
 return-type function-name(parameter-declarations, if-any)
 {
-  declarations;
+    declarations;
 
-  statements;
+    statements;
 }
 ```
 Function definitions can appear in any order, and in one source file or several, although no function can be split between files. If the source program appears in several files, you may have to say more to compile and load it than if it all appears in one, but that is an operating system matter, not a language attribute. For the moment, we will assume that both functions are in the same file, so whatever you have learned about running C programs will still work.
@@ -824,11 +805,11 @@ The story is different for arrays. When the name of an array is used as an argum
 
 The most common type of array in C is the array of characters. To illustrate the use of character arrays and functions to manipulate them, let's write a program that reads a set of text lines and prints the longest. The outline is simple enough:
 ```
-  while (there's another line)
-      if (it's longer than the previous longest)
-          save it
-          save its length 
-  print longest line
+   while (there's another line)
+        if (it's longer than the previous longest)
+            save it
+            save its length 
+    print longest line
 ```
 This outline makes it clear that the program divides naturally into pieces. One piece gets a new line, another tests it, another saves it, and the rest controls the process.
 
@@ -920,7 +901,6 @@ There is no way for a user of `getline` to know in advance how long an input lin
 - **Exercise 1.19**: Write a function `reverse(s)` that reverses the character string `s`. Use it to write a program that reverses its input a line at a time.
 
 
-
 ## 1.10 External Variables and Scope
 
 The variables in main, such as `line`, `longest`, etc., are private or local to main. Because they are declared within main, no other function can have direct access to them. The same is true of the variables in other functions; for example, the variable `i` in `getline` is unrelated to the `i` in `copy`. Each local variable in a function comes into existence only when the function is called, and disappears when the function is exited. This is why such variables are usually known as *automatic variables*, following terminology in other languages. We will use the term automatic henceforth to refer to these local variables. (Chapter 4 discusses the `static` storage class, in which local variables do retain their values between calls.)
@@ -994,7 +974,7 @@ void copy(void)
 
 The external variables in `main`, `getline`, and `copy` are defined by the first lines of the example above, which state their type and cause storage to be allocated for them. Syntactically, external definitions are just like definitions of local variables, but since they occur outside of functions, the variables are external. Before a function can use an external variable, the name of the variable must be made known to the function. One way to do this is to write an `extern` declaration in the function; the declaration is the same as befor eexcept for the added keyword `extern`.
 
-In certain circumstances, the extern declaration can be omitted. If the definition of an external variable occurs in the source file before its use in a particular function, then there is no need for an extern declaration in the function. The extern declarations in main, getline, and copy are thus redundant. In fact, common practice is to place definitions of all external variables at the beginning of the source file,andthenomitallextern declarations.
+In certain circumstances, the extern declaration can be omitted. If the definition of an external variable occurs in the source file before its use in a particular function, then there is no need for an extern declaration in the function. The extern declarations in main, getline, and copy are thus redundant. In fact, common practice is to place definitions of all external variables at the beginning of the source file, and then omit all extern declarations.
 
 If the program is in several source files, and a variable is defined in `file1` and used in `file2` and `file3`, then extern declarations are needed in `file2` and `file3` to connect the occurrences of the variable. The usual practice is to collect extern declarations of variables and functions in a separate file, historically called a *header*, that is included by `#include` at the front of each source file. The suffix `.h` is conventional for header names. The functions of the standard library, for example, are declared in headers like `<stdio.h>`. This topic is discussed at length in Chapter 4, and the library itself in Chapter 7 and Appendix B.
 
@@ -1004,4 +984,4 @@ You should note that we are using the words *definition* and *declaration* caref
 
 By the way, there is a tendency to make everything in sight an `extern` variable because it appears to simplify communications; argument lists are short and variables are always there when you want them. But external variables are always there even when you don't want them. Relying too heavily on external variables is fraught with peril since it leads to programs whose data connections are not at all obvious-variables can be changed in unexpected and even inadvertent ways, and the program is hard to modify. The second version of the longest-line program is inferior to the first, partly for these reasons, and partly because it destroys the generality of two useful functions by wiring into them the names of the variables they manipulate.
 
-At this point we have covered what might be called the conventional core of C. With this handful of building blocks, it's possible to write useful programs of considerable size, and it would probably be a good idea if you paused long enough to do so. These exercises suggest programs of somewhat greater com- plexity than the ones earlier in this chapter.
+At this point we have covered what might be called the conventional core of C. With this handful of building blocks, it's possible to write useful programs of considerable size, and it would probably be a good idea if you paused long enough to do so. These exercises suggest programs of somewhat greater complexity than the ones earlier in this chapter.

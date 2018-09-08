@@ -656,7 +656,7 @@ C, like most languages, does not specify the order in which the operands of an o
 
 Similarly, the order in which function arguments are evaluated is not specified, so the statement
 ```c
-    printf ("%d %d\n", ++n, power(2, n)); /* WRONG */
+    printf("%d %d\n", ++n, power(2, n)); /* WRONG */
 ```
 can produce different results with different compilers, depending on whether `n`
 is incremented before `power` is called. The solution, of course, is to write
