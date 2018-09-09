@@ -158,7 +158,6 @@ Each case is labeled by one or more integer-valued constants or constant express
 
 In Chapter 1 we wrote a program to count the occurrences of each digit, white space, and all other characters, using a sequence of `if ... else if ... else`. Here is the same program with a `switch`:
 ```c
-```c
 #include <stdio.h>
 
 /* count digits, whitespace, and others */
@@ -170,35 +169,42 @@ main()
     for (i = 0; i < 10; ++i) 
         ndigit[i] = 0;
 
-    while ((c = getchar()) != EOF) 
-    {
-        if (c >= '0' && c <= '9') 
-        {
-            ++ndigit[c-'O'];
+    while ((c = getchar()) != EOF) {
+        switch (c) {
+          case '0':
+          case '1':
+          case '2':
+          case '3':
+          case '4':
+          case '5':
+          case '6':
+          case '7':
+          case '8':
+          case '9':
+              ndigit[c-'O']++;
+              break;
+          case ' ':
+          case '\n':
+          case '\t':
+              nwhite++;
+              break;
+          default:
+              nother++;
+              break;
         }
-        else if (c == ' ' ||  c == '\n' || c == '\t') 
-        {
-            ++nwhite; 
-        }
-        else 
-        {
-            ++nother;
-        }
-    } 
+    }
 
     printf("digits =");
     for (i = 0; i < 10; ++i) 
-    {
         printf(" %d", ndigit[i]);
-    }
     printf(", white space = %d, other = %d\n", nwhite, nother);
+    
+    return 0;
 }
 ```
-```
-The break statement causes an immediate exit from the switch. Because
-cases serve just as labels, after the code for one case is done, execution falls through to the next unless you take explicit action to escape. break and returnarethemostcommonwaystoleaveaswitch.Abreakstatement can also be used to force an immediate exit from while, for, and do loops,as will be discussed later in this chapter.
+The `break` statement causes an immediate exit from the `switch`. Because cases serve just as labels, after the code for one case is done, execution *falls through* to the next unless you take explicit action to escape. `break` and `return` are the most common ways to leave a `switch`. A `break` statement can also be used to force an immediate exit from `while`, `for`, and `do` loops, as will be discussed later in this chapter.
 
-Falling through cases is a mixed blessing. On the positive side, it allows several cases to be attached to a single action, as with the digits in this example. But it also implies that normally each case must end with a break to prevent falling through to the next. Falling through from one case to another is not robust, being prone to disintegration when the program is modified. With the exception of multiple labels for a single computation, fall-throughs should be used sparingly, and commented.
+Falling through cases is a mixed blessing. On the positive side, it allows several cases to be attached to a single action, as with the digits in this example. But it also implies that normally each case must end with a `break` to prevent falling through to the next. Falling through from one case to another is not robust, being prone to disintegration when the program is modified. With the exception of multiple labels for a single computation, fall-throughs should be used sparingly, and commented.
 
 As a matter of good form, put a `break` after the last case (the `default` here) even though it's logically unnecessary. Some day when another case gets added at the end, this bit of defensive programming will save you
 
@@ -207,6 +213,194 @@ As a matter of good form, put a `break` after the last case (the `default` here)
 
 
 ## 3.5. Loops – While and For
+
+We have already encountered the while and for loops. In
+```c
+    while (expression)
+        statement
+```
+the `expression` is evaluated. If it is non-zero, `statement` is executed and `expression` is re-evaluated. This cycle continues until `expression` becomes zero, at which point execution resumes after `statement`.
+
+The `for` statement
+```c
+    for (expr_1; expr_2; expr_3)
+        statement
+```
+is equivalent to
+```c
+    expr_1;
+    while (expr_2) {
+      statement
+      expr_3;
+    }
+```
+except for the behavior of `continue`, which is described in Section 3.7.
+
+Grammatically, the three components of a `for` loop are expressions. Most commonly, expr_1 and expr_3 are assignments or function calls and expr_2 is a relational expression. Any of the three parts can be omitted, although the semicolons must remain. If expr_1, or expr_3, is omitted, it is simply dropped from the expansion. If the test, expr_2, is not present,it is taken as permanently true, so
+```c
+    for (;;) {
+        // statements
+    }
+```
+is an "infinite" loop, presumably to be broken by other means, such as a `break` or `return`.
+
+Whether to use `while` or `for` is largely a matter of personal preference.  
+
+For example, in
+```c
+    while ((c = getchar()) == ' ' || c == '\n' || c == '\t')
+        ;   /* skip white space characters */
+```
+there is no initialization or re-initialization, so the `while` is most natural.
+
+The `for` is preferable when there is a simple initialization and increment, since it keeps the loop control statements close together and visible at the top of the loop. This is most obvious in
+```c
+    for (i = 0; i < n; i++)
+        // statements
+```
+which is the C idiom for processing the first n elements of an array, the analog of the Fortran `DO` loop or the Pascal `for`. The analogy is not perfect, however, since the index and limit of a C `for` loop can be altered from within the loop, and the index variable `i` retains its value when the loop terminates for any reason. Because the components of the `for` are arbitrary expressions, `for` loops are not restricted to arithmetic progressions. Nonetheless, it is bad style to force unrelated computations into the initialization and increment of a `for`, which are better reserved for loop control operations.
+
+As a larger example, here is another version of `atoi` for converting a string to its numeric equivalent. This one is slightly more general than the one in Chapter 2; it copes with optional leading white space and an optional `+` or `-` sign. (Chapter 4 shows `atof`, which does the same conversion for floating-point numbers).
+
+The structure of the program reflects the form of the input:
+```
+    skip white space, if any
+    get sign, if any
+    get integer part and convert it
+```
+Each step does its part, and leaves things in a clean state for the next. The whole process terminates on the first character that could not be part of a number.
+```c
+#include <ctype.h>
+
+/* atoi: convert s to integer; version 2 */
+int atoi(char s[])
+{
+    int i, n, sign;
+
+    for (i = 0; isspace(s[i]); i++)  /* skip white space */
+        ;
+
+    sign = (s[i] == '-') ? -1 : 1;
+
+    if (s[i] == '+' || s[i] == '-')  /* skip sign */
+        i++;
+
+    for (n = 0; isdigit(s[i]); i++)
+        n = 10 * n + (s[i] - '0');
+    
+    return sign * n;
+}
+```
+The standard library provides a more elaborate function `strtol` for conversion of strings to long integers; see Section 5 of Appendix B.
+
+The advantages of keeping loop control centralized are even more obvious when there are several nested loops. The following function is a Shell sort for sorting an array of integers. The basic idea of this sorting algorithm, which was invented in 1959 by D. L. Shell, is that in early stages, far-apart elements are compared, rather than adjacent ones as in simpler interchange sorts. This tends to eliminate large amounts of disorder quickly, so later stages have less work to do. The interval between compared elements is gradually decreased to one, at which point the sort effectively becomes an adjacent interchange method.
+```c
+/* shellsort: sort v[0]...v[n-1] into increasing order */
+void shellsort(int v[], int n)
+{
+    int gap, i, j, temp;
+
+    for (gap = n/2; gap > 0; gap /= 2)
+        for (i = gap; i < n; i++)
+            for (j=i-gap; j>=0 && v[j]>v[j+gap]; j -= gap) {
+                temp = v[j];
+                v[j] = v[j+gap];
+                v[j+gap] = temp;
+            }
+}
+```
+There are three nested loops. The outermost controls the gap between compared elements, shrinking it from `n/2` by a factor of two each pass until it becomes zero. The middle loop steps along the elements. The innermost loop compares each pair of elements that is separated by `gap` and reverses any that are out of order. Since `gap` is eventually reduced to one, all elements are eventually ordered correctly. Notice how the generality of the `for` makes the outer loop fit the same form as the others, even though it is not an arithmetic progression.
+
+One final C operator is the comma `,`, which most often finds use in the forstatement.Apairofexpressionsseparatedbyacommaisevaluatedleftto right, and the type and value of the result are the type and value of the right operand. Thus in a `for` statement, it is possibleto place multiple expressionsin the various parts, for example to process.two indices in parallel. This is illus- trated in the function `reverse(s)`, which reverses the string `s` in place.
+```c
+#include <string.h>
+
+/* reverse: reverse string s in place */
+void reverse(char s[])
+{
+    int c, i, j;
+
+    for (i = 0, j = strlen(s) - 1; i < j; i++, j--) 
+        c = s[i]; 
+        s[i] = s[j];
+        s[j] = c;
+}
+```
+The commas that separate function arguments, variables in declarations, etc., are *not* comma operators, and do not guarantee left to right evaluation.
+
+Comma operators should be used sparingly. The most suitable uses are for constructs strongly related to each other, as in the `for` loop in `reverse`, and in macros where a multistep computation has to be a single expression. A comma expression might also be appropriate for the exchange of elements in reverse, where the exchange can be thought of as a single operation:
+```c
+    for (i = 0, j = strlen(s) - 1; i < j; i++, j--) 
+        c = s[i], s[i] = s[j], s[j] = c;
+```
+
+### Examples
+- **Exercise 3.3**: Write a function `expand(s1, s2)` that expands shorthand notations like `a - z` in the string `s1` into the equivalent complete list `abc...xyz` in `s2`. Allow for letters of either case and digits, and be prepared to handle cases like `a-b-c` and `a-zO-9` and `-a-z`. Arrange that a leading or trailing `-` is taken literally.
+
+
 ## 3.6. Loops – Do-while
+
+As we discussed in Chapter 1, the `while` and `for` loops test the termination condition at the top. By contrast, the third loop in C, the `do`-`while`, tests at the bottom after making each pass through the loop body; the body is always executed at least once.
+
+The syntax of the do is
+```c
+    do {
+        // statement
+    } while (expression);
+```
+The `statement` is executed, then `expression` is evaluated. If it is true, `statement` is evaluated again, and so on. When the expression becomes false, the loop terminates. Except for the sense of the test, `do`-`while` is equivalent to the Pascal `repeat-until` statement.
+
+Experience shows that `do-while` is much less used than `while` and `for`. Nonetheless, from time to time it is valuable, as in the following function `itoa`, which converts a number to a character string (the inverse of `atoi`). The job is slightly more complicated than might be thought at first, because the easy methods of generating the digits generate them in the wrong order. We have chosen to generate the string backwards, then reverse it.
+```c
+/* itoa: convert n to characters in s */
+void itoa(int n, char s[])
+{
+    int i, sign;
+
+    if ((sign = n) < 0) /* record sign */
+        n = -n;         /* make n positive */
+    i = 0;
+    do {                /* generate digits in reverse order */
+        s[i++] = n % 10 + '0'; /* get next digit */
+    } while ((n /=1-) > 0);
+    if (sign < 0)
+        s[i++] = '-';
+    s[i] = '\0';
+    reverse(s);
+}
+```
+The `do-while` is necessary, or at least convenient, since at least one character must be installed in the array `s`, even if `n` is zero. We also used braces around the single statement that makes up the body of the `do-while`, even though they are unnecessary, so the hasty reader will not mistake the `while` part for the *beginning* of a whi1e loop.
+
+### Exercises
+- **Exercise 3.4**: In a two's complement number representation, our version of `itoa` does not handle the largest negative number, that is, the value of `n` equal to $-(2^{wordsize-1})$. Explain why not. Modify it to print that value correctly, regardless of the machine on which it runs.
+- **Exercise 3.5**: Write the function `itob(n, s, b)` that converts the intger `n` into a base `b` character representation in the string `s`. In particular, `itob(n, s, 16)` formats n as a hexadecimal integer in `s`.
+- **Exercise 3.6**: Write a version of `itoa` that accepts three arguments instead of two. The third argument is a minimum field width; the converted number must be padded with blanks on the left if necessary to make it wide enough.
+
+
 ## 3.7. Break and Continue
+
+It is sometimes convenient to be able to exit from a loop other than by testing at the top or bottom. The `break` statement provides an early exit from `for`, `while`, and `do`, just as from `switch`. A `break` causes the innermost enclosing loop or `switch` to be exited immediately.
+
+The following function, `trim`, removes trailing blanks, tabs, and newlines from the end of a string, using a `break` to exit from a loop when the rightmost non-blank, non-tab, non-newline is found.
+```c
+/* trim: remove trailing blanks, tabs, & newlines */
+int trim(char s[])
+{
+    int n;
+}
+```
+`strlen` returns the length of the string. The `for` loop starts at the end and scans backwards looking for the first character that is not a blank or tab or newline. The loop is broken when one is found, or when n becomes negative (that is, when the entire string has been scanned). You should verify that this is correct behavior even when the string is empty or contains only white space characters.
+
+The `continue` statement is related to break, but less often used; it causes the next iteration of the enclosing for, while, or do loop to begin. In the while and do, this means that the test part is executed immediately; in the for, control passes to the increment step. The continue statement applies only to loops, not to switch. A continue inside a switch inside a loop causes the next loop iteration.
+
+As an example, this fragment processes only the non-negative elements in the array `a`; negative values are skipped.
+```c
+
+```
+The `continue` statement is often used when the part of the loop that follows is complicated, so that reversing a test and indenting another level would nest the program too deeply.
+
+
+
 ## 3.8. Goto and Labels
+
+
