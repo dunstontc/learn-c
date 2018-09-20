@@ -97,13 +97,14 @@ The way to obtain the desired effect is for the calling program to pass *pointer
 ```
 Since the operator `&` produces the address of a variable, `&a` is a pointer to `a`. In swap itself, the parameters are declared to be pointers, and the operands are accessed indirectly through them.
 ```c
-voidswap(int *px, int *py) /* interchange *px and *py */
+void swap(int *px, int *py) /* interchange *px and *py */
 {
     int temp;
 
     temp = *px; 
     *px = *py; 
     *py = temp;
+}
 ```
 Pictorially:
 
@@ -263,8 +264,19 @@ So as far as `f` is concerned, the fact that the parameter refers to part of a l
 If one is sure that the elements exist, it is also possible to index backwards in an array; `p[-1]`, `p[-2]`, and so on are syntactically legal,and refer to the elements that immediately precede `p[0]`. Of course, it is illegal to refer to objects that are not within the array bounds.
 
 
-
 ## 5.4. Address Arithmetic
+
+If `p` is a pointer to some element of an array, then `p++` increments `p` to point to the next element, and `p+=i` increments it to point `i` elements beyond where it currently does. These and similar constructions are the simplest forms of pointer or address arithmetic.
+
+C is consistent and regular in its approach to address arithmetic; its integration of pointers, arrays, and address arithmetic is one of the strengths of the language. Let us illustrate by writing a rudimentary storage allocator. There are two routines. The first, `alloc(n)`, returns a pointer `p` to `n` consecutive character positions, which can be used by the caller of `alloc` for storing characters. The second, `afree(p)`, releases the storage thus acquired so it can be re-used later. The routines are "rudimentary" because the calls to `afree` must be made in the opposite order to the calls made on `alloc`. That is, the storage managed by `alloc` and `afree` is a *stack*, or last-in, first-out list. The standard library provides analogous functions called `malloc` and `free` that have no such restrictions; in Section 8.7 we will show how they can be implemented.
+
+The easiest implementation is to have `alloc` hand out pieces of a large character array that we will call `allocbuf`. This array is private to `alloc` and `afree`. Since they deal in pointers, not array indices, no other routine need know the name of the array, which can be declared `static` in the source file containing `alloc` and `afree`, and thus be invisible outside it. In practical implementations, the array may well not even have a name; it might instead be obtained by calling `malloc` or by asking the operating system for a pointer to some unnamed block of storage.
+
+The other information needed is how much of `allocbuf` has been used. We use a pointer, called `allocp`, that points to the next free element. When `alloc` is asked for `n` characters, it checks to see if there is enough room left in `allocbuf`. If so, `alloc` returns the current value of `allocp` (i.e., the beginning of the free block), then increments it by `n` to point to the next free area. If there is no room, `alloc` returns zero. `afree(p)` merely sets `allocp` to `p` if `p` is inside `allocbuf`.
+
+![Figure 5.6](https://raw.githubusercontent.com/dunstontc/learn-c/master/code/C/TCPL/src/assets/fig5.6.png)
+
+
 ## 5.5. Character Pointers and Functions
 ## 5.6. Pointer Arrays; Pointers to Pointers
 ## 5.7. Multi-dimensional Arrays
