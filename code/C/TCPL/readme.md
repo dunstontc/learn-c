@@ -184,3 +184,4 @@
   - **Exercise 3.6**: Write a version of `itoa` that accepts three arguments instead of two. The third argument is a minimum field width; the converted number must be padded with blanks on the left if necessary to make it wide enough.
 - Chapter 4
   - **Exercise 4.1**: Write the function `strrindex(s, t)`, which returns the position of the *rightmost* occurrence of `t` in `s`, or `-1` if there is none.
+  - **Exercise 4.2**: Extend `atof` to handle scientific notation of the form $123.45e-6$ where a floating-point number may be followed by `e` or `E` and an optionally signed exponent
