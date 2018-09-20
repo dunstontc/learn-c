@@ -64,7 +64,7 @@
   - 5.4. Address Arithmetic
   - 5.5. Character Pointers and Functions
   - 5.6. Pointer Arrays; Pointers to Pointers
-  - 5.7. Multi-dimensionalArrays
+  - 5.7. Multi-dimensional Arrays
   - 5.8. Initialization of Pointer Arrays
   - 5.9. Pointers vs. Multi-dimensional Arrays
   - 5.10. Command-line Arguments
@@ -93,8 +93,8 @@
   - 8.1. File Descriptors
   - 8.2. Low Level I/O-Read and Write
   - 8.3. Open, Creat, Close, Unlink
-  - 8.4. Random Access- Lseek
-  - 8.5. Example-An Implementation of Fopen and Getc
+  - 8.4. Random Access - Lseek
+  - 8.5. Example - An Implementation of Fopen and Getc
   - 8.6. Example - Listing Directories
   - 8.7. Example - A Storage Allocator
 
@@ -197,3 +197,6 @@
   - **Exercise 4.12**: Adapt the ideas of `printd` to write a recursive version of `itoa`; that is, convert an integer into a string by calling a recursive routine.
   - **Exercise 4.13**: Write a recursive version of the function `reverse(s)`, which reverses the string `s` in place.
   - **Exercise 4.14**: Define a macro `swap(t, x, y)` that interchanges two arguments of type `t`. (Block structure will help.)
+- Chapter 5
+  - **Exercise 5.1**: As written, `getint` treats a `+` or `-` not followed by a digit as a valid representation of zero. Fix it to push such a character back on the input.
+  - **Exercise 5.2**: Write `getfloat`, the floating-point analog of `getint`. What type does `getfloat` return as its function value?
