@@ -507,13 +507,321 @@ There is one more thing to worry about; the definitions and declarations shared 
 
 There is a tradeoff between the desire that each file have access only to the information it needs for its job and the practical reality that it is harder to maintain more header files. Up to some moderate program size, it is probably best to have one header file that contains everything that is to be shared between any two parts of the program; that is the decision we made here. For a much larger program, more organization and more headers would be needed.
 
+
 ## 4.6. Static Variables 
+
+The variables `sp` and `val` in `stack.c`, and `buf` and `bufp` in `getch.c`, are for the private use of the functions in their respective source files, and are not meant to be accessed by anything else. The `static` declaration, applied to an external variable or function, limits the scope of that object to the rest of the source file being compiled. External `static` thus provides a way to hide names like `buf` and `bufp` in the `getch`-`ungetch` combination, which must be external so they can be shared, yet which should not be visible to users of `getch` and `ungetch`.
+
+Static storage is specified by prefixing the normal declaration with the word `static`. If the two routines and the two variables are compiled in one file, as in
+```c
+    static char buf[BUFSIZE]; /* buffer for ungetch */
+    static int bufp = 0;      /* next free position in buf */
+
+    int getch(void) {/*...*/}
+
+    void ungetch(int c) {/*...*/}
+```
+then no other routine will be able to access `buf` and `bufp`, and those names will not conflict with the same names in other files of the same program. In the same way, the variables that `push` and `pop` use for stack manipulation can be hidden, by declaring `sp` and `val` to be `static`.
+
+The external `static` declaration is most often used for variables, but it can be applied to functions as well. Normally, function names are global, visible to any part of the entire program. If a function is declared `static`, however, its name is invisible outside of the file in which it is declared.
+
+
+The `static` declaration can also be applied to internal variables. Internal `static` variables are local to a particular function just as automatic variables are, but unlike automatics, they remain in existence rather than coming and going each time the function is activated. This means that internal `static` variables provide private, permanent storage within a single function.
+
+
 ## 4.7. Register Variables
-## 4.8. BlockStructure
+
+A `register` declaration advises the compiler that the variable in question will be heavily used. The idea is that register variables are to be placed in machine registers, which may result in smaller and faster programs. But compilers are free to ignore the advice.
+
+The register declaration looks like
+```c
+    register int x;
+    register char c;
+```
+and so on. the `register` declaration can only be applied to automatic variables and to the formal parameters of a function. In this latter case, it looks like
+```c
+    f(register unsigned m, register long n)
+    {
+        register int i;
+        ...
+    }
+```
+In practice, there are restrictions on `register` variables, reflecting the realities of underlying hardware. Only a few variables in each function may be kept in registers, and only certain types are allowed. Excess register declarations are harmless, however, since the word `register` is ignored for excess or disallowed declarations. And it is not possible to take the address of a register variable (a topic to be covered in Chapter 5), regardless of whether the variable is actually placed in a register. The specific restrictions on number and types of register variables vary from machine to machine.
+
+
+## 4.8. Block Structure
+
+C is not a block-structured language in the sense of Pascal or similar languages, because functions may not be defined within other functions. On the other hand, variables can be defined in a block-structured fashion within a function. Declarations of variables (including initializations) may follow the left brace that introduces *any* compound statement, not just the one that begins a function. Variables declared in this way hide any identically named variables in outer blocks, and remain in existence until the matching right brace. For example, in
+```c
+    if (n > 0) {
+        int i; /* declare a new i */
+
+        for (i = 0; i < n; i++) {
+            ...
+        }
+    }
+```
+the scope of the variable `i` is the "true" branch of the `if`; this `i` is unrelated to any `i` outside the block. An automatic variable declared and initialized in a block is initialized each time the block is entered. A `static` variable is initialized only the first time the block is entered.
+
+Automatic variables, including formal parameters, also hide external variables and functions of the same name. Given the declarations
+```c
+    int X; 
+    int y;
+
+    f(double x)
+    {
+        double y;
+        ...
+    }
+```
+then within the function `f`, occurrences of `x` refer to the parameter, which is a `double`; outside of `f`, they refer to the external `int`. The same is true of the variable `y`.
+
+As a matter of style, it's best to avoid variable names that conceal names in an outer scope; the potential for confusion and error is too great.
+
+
 ## 4.9. Initialization
+
+
+Initialization has been mentioned in passing many times so far, but always peripherally to some other topic. This section summarizes some of the rules, now that we have discussed the various storage classes.
+
+In the absence of explicit initialization, external and static variables are guaranteed to be initialized to zero; automatic and register variables have undefined (i.e., garbage) initial values.
+
+Scalar variables may be initialized when they are defined, by following the name with an equals sign and an expression:
+```c
+    int x = 1;
+    char squote = '\''; 
+    long day = 1000L * 60L * 60L * 24L; /* milliseconds/day */
+```
+For external and static variables, the initializer must be a constant expression; the initialization is done once, conceptually before the program begins execution. For automatic and register variables, it is done each time the function or block is entered.
+
+For automatic and register variables, the initializer is not restricted to being a constant: it may be any expression involving previously defined values, even function calls. For example, the initializations of the binary search program in Section 3.3 could be written as
+```c
+    int binsearch(int x, int v[], int n)
+    {
+        int low = 0;
+        int high = n - 1;
+        int mid;
+        ...
+    }
+```
+instead of
+```c
+    int low, high, mid;
+```
+In effect, initializations of automatic variables are just shorthand for assignment statements. Which form to prefer is largely a matter of taste. We have generally used explicit assignments, because initializers in declarations are harder to see and further away from the point of use.
+
+An array may be initialized by following its declaration with a list of initializers enclosed in braces and separated by commas. For example, to initialize an array days with the number of days in each month:
+```c
+  int days[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+```
+When the size of the array is omitted, the compiler will compute the length by counting the initializers, of which there are 12 in this case.
+
+If there are fewer initializers for an array than the number specified, the missing elements will be zero for external, static, and automatic variables. It is an error to have too many initializers. There is no way to specify repetition of an initializer, nor to initialize an element in the middle of an array without supplying all the preceding values as well.
+
+Character arrays are a special case of initialization; a string may be used instead of the braces and commas notation:
+```c
+    char pattern [] = "ould";
+```
+is a shorthand for the longer but equivalent
+```c
+    char pattern[] = { 'o', 'u', 'l', 'd', '\0' };
+```
+In this case, the array size is five (four characters plus the terminating , `'\0'` ).
+
+
 ## 4.10. Recursion 
+
+C functions may be used recursively; that is, a function may call itself either directly or indirectly. Consider printing a number as a character string. As we mentioned before, the digits are generated in the wrong order: low-order digits are available before high-order digits, but they have to be printed the other way around.
+
+There are two solutions to this problem. One is to store the digits in an array as they are generated, then print them in the reverse order, as we did with `itoa` in Section 3.6. The alternative is a recursive solution, in which `printd` first calls itself to cope with any leading digits, then prints the trailing digit. Again, this version can fail on the largest negative number.
+```c
+#include <stdio.h>
+
+/* printd: print n in decimal*/
+void printd(int n)
+{
+    if (n < 0) {
+        putchar('-');
+        n = -n;
+    }
+    if (n / 10) {
+        printd(n / 10);
+        putchar(n % 10 + '0');
+    }
+}
+```
+When a function calls itself recursively, each invocation gets a fresh set of all the automatic variables, independent of the previous set. Thus in `printd(123)` the first `printd` receives the argument `n = 123`. It passes `12` to a second `printd`, which in turn passes `1` to a third. The third-level `printd` prints `1`, then returns to the second level. That `printd` prints `2`, then returns to the first level. That one prints 3 and terminates.
+
+Another good example of recursion is quicksort, a sorting algorithm developed by C. A. R. Hoare in 1962. Given an array, one element is chosen and the others are partitioned into two subsets; those less than the partition element and those greater than or equal to it. The same process is then applied recursively to the two subsets. When a subset has fewer than two elements, it doesn't need any sorting; this stops the recursion.
+
+Our version of quicksort is not the fastest possible, but it's one of the simplest. We use the middle element of each subarray for partitioning.
+```c
+/* qsort: sort v[left]...v[right] into increasing order*/
+void qsort(int v[], int left, int right)
+{
+    int i, last;
+    void swap(int v[], int i, int j);
+
+    if (left >= right)                  /* do nothing if array contains */
+        return;                         /* fewer than two elements */
+    swap(v, left, (left + right) / 2);  /* move partition elem */
+    last = left;                        /* to v[O] */
+    for (i = left + 1; i <= right; i++) /* partition */
+        if (v[i] < v[left])
+            swap(v, ++last, i);
+    swap(v, left, last);                /* restore partition elem */
+    qsort(v, left, last - 1);
+    qsort(v, last + 1, right);
+}
+```
+We moved the swapping operation into a separate function swap because it occurs three times in `qsort`.
+```c
+/* swap: interchange v[i] and v[j] */
+void swap(int v[], int i, int j)
+{
+    int temp;
+
+    temp = v[i];
+    v[i] = v[j];
+    v[j] = temp;
+}
+```
+The standard library includes a version of `qsort` that can sort objects of any type.
+
+Recursion may provide no saving in storage, since somewhere a stack of the values being processed must be maintained. Nor will it be faster. But recursive code is more compact, and often much easier to write and understand than the non-recursive equivalent. Recursion is especially convenient for recursively defined data structures like trees; we will see a nice example in Section 6.5.
+
+
 ## 4.11. The C Preprocessor
+
+C provides certain language facilities by means of a *preprocessor*, which is conceptually a separate first step in compilation. The two most frequently used features are `#include`, to include the contents of a file during compilation, and `#define`, to replace a token by an arbitrary sequence of characters. Other features described in this section include conditional compilation and macros with arguments.
+
+
 ### 4.11.1 File Inclusion
+
+File inclusion makes it easy to handle collections of #def ines and declarations (among other things). Any source line of the form
+```c
+    #include <filename>
+```
+or
+```c
+    #include "filename"
+```
+is replaced by the contents of the file `filename`. If the `filename` is quoted, searching for the file typically begins where the source program was found; if it is not found there, or if the name is enclosed in `<` and `>`, searching follows an implementation-defined rule to find the file. An included file may itself contain `#include` lines.
+
+There are often several `#include` lines at the beginning of a source file, to include common `#define` statements and extern declarations, or to access the function prototype declarations for library functions from headers like `<stdio.h>`. (Strictly speaking, these need not be files; the details of how headers are accessed are implementation-dependent.)
+
+`#include` is the preferred way to tie the declarations together for a large program. It guarantees that all the source files will be supplied with the same definitions and variable declarations, and thus eliminates a particularly nasty kind of bug. Naturally, when an included file is changed, all files that depend on it must be recompiled.
+
+
 ### 4.11.2 Macro Substitution
+
+A definition has the form
+```c
+    #define name replacement text
+```
+It calls for a macro substitution of the simplest kind-subsequent occurrences of the token `name` will be replaced by the `replacement text`. The name in a `#define` has the same form as a variable name; the replacement text is arbitrary. Normally the replacement text is the rest of the line, but a long definition may be continued onto several lines by placing a `\` at the end of each line to be continued. The scope of a name defined with `#define` is from its point of definition to the end of the source file being compiled. A definition may use previous definitions. Substitutions are made only for tokens, and do not take place within quoted strings. For example, if `YES` is a defined name, there would be no substitution in `printf("YES")` or in `YESMAN`.
+
+Any name may be defined with any replacement text. For example,
+```c
+    #define forever for (;;) /* infinite loop */
+```
+defines a new word, `forever`, for an infinite loop.
+
+It is also possible to define macros with arguments, so the replacement text can be different for different calls of the macro. As an example, define a macro called `max`:
+```c
+  #define max(A, B) ((A) > (B) ? (A) : (B))
+```
+Although it looks like a function call, a use of `max` expands into in-line code. Each occurrence of a formal parameter (here `A` or `B`) will be replaced by the corresponding actual argument. Thus the line
+```c
+    x = max(p+q, r+s);
+```
+will be replaced by the line
+```c
+    x = ((p+q) > (r+s) ? (p+q) : (r+s));
+```
+So long as the arguments are treated consistently, this macro will serve for any data type; there is no need for different kinds of `max` for different data types, as there would be with functions.
+
+If you examine the expansion of `max`, you will notice some pitfalls. The expressions are evaluated twice; this is bad if they involve side effects like increment operators or input and output. For instance,
+```c
+    max(i++, j++)   /* WRONG */
+```
+will increment the larger value twice. Some care also has to be taken with parentheses to make sure the order of evaluation is preserved; consider what happens when the macro
+```c
+    #define square(x) x * x /* WRONG */
+```
+is invoked as `square(z+1)`.
+
+Nonetheless, macros are valuable. One practical example comes from `<stdio.h>`, in which `getchar` and `putchar` are often defined as macros to avoid the run-time overhead of a function call per character processed. The functions in `<ctype.h>` are also usually implemented as macros.
+
+Names may be undefined with `#undef`, usually to ensure that a routine is really a function, not a macro:
+```c
+    #undef getchar
+
+    int getchar(void) { ... }
+```
+Formal parameters are not replaced within quoted strings. If, however, a parameter name is preceded by a `#` in the replacement text, the combination will be expanded into a quoted string with the parameter replaced by the actual argument. This can be combined with string concatenation to make, for example, a debugging print macro:
+```c
+    #define dprint(expr) printf(#expr " = %g\n", expr)
+```
+When this is invoked, as in
+```c
+    dprint(x/y);
+```
+the macro is expanded into
+```c
+    printf("x/y " " = %g\n", x/y);
+```
+and the strings are concatenated, so the effect is
+```c
+    printf("x/y = %g\n", x/y);    
+```
+Within the actual argument, each `"` is replaced by `\"` and each `\` by `\\`, so the result is a legal string constant.
+
+The preprocessor operator `##` provides a way to concatenate actual arguments during macro expansion. If a parameter in the replacement text is adjacent to a `##`, the parameter is replaced by the actual argument, the `##` and surrounding white space are removed, and the result is re-scanned. For example, the macro `paste` concatenates its two arguments:
+```c
+    #define paste(front, back) front ## back
+```
+so `paste(name, 1)` creates the token `name1`.
+
+The rules for nested uses of ## are arcane; further details may be found in Appendix A.
+
+
 ### 4.11.3 Conditional Inclusion
 
+It is possible to control preprocessing itself with conditional statementst hat are evaluated during preprocessing. This provides a way to include code selectively, depending on the value of conditions evaluated during compilation.
+
+The `#if` line evaluates a constant integer expression(which may not include `sizeof`, casts, or `enum` constants). If the expression is non-zero, subsequent lines until an `#endif` or `#elif` or `#else` are included. (The preprocessor statement `#elif` is like `else if`.) The expression `defined(name)` in a `#if` is `1` if the `name` has been defined, and `0` otherwise.
+
+For example, to make sure that the contents of a file `hdr.h` are included only once, the contents of the file are surrounded with a conditional like this:
+```c
+    #if !defined(HDR) 
+    #define HDR 
+
+    /* contents of hdr.h go here */
+
+    #endif
+```
+The first inclusion of `hdr.h` defines the name `HDR`; subsequent inclusions will find the name defined and skip down to the `#endif`. A similar style can be used to avoid including files multiple times. If this style is used consistently, then each header can itself include any other headers on which it depends, without the user of the header having to deal with the interdependence.
+
+This sequence tests the name `SYSTEM` to decide which version of a header to include:
+```c
+    #if SYSTEM == SYSV 
+        #define HDR "sysv.h"
+    #elif SYSTEM == BSD 
+        #define HDR "bsd.h"
+    #elif SYSTEM == MSDOS 
+        #define HDR "msdos.h"
+    #else
+        #define HDR "default.h"
+    #endif 
+    #include HDR
+```
+The `#ifdef` and `#ifndef` lines are specialized forms that test whether a name is defined. The first example of `#if` above could have been written
+```c
+    #ifndef HDR
+    #define HDR
+
+    /* contents of hdr.h go here */
+
+    #endif
+```
