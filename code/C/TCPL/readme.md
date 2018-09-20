@@ -53,7 +53,7 @@
   - 4.5. Header Files
   - 4.6. Static Variables 
   - 4.7. Register Variables
-  - 4.8. BlockStructure
+  - 4.8. Block Structure
   - 4.9. Initialization
   - 4.10. Recursion 
   - 4.11. The C Preprocessor
