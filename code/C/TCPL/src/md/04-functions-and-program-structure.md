@@ -505,7 +505,6 @@ There is one more thing to worry about; the definitions and declarations shared 
 
 ![Figure 4.1](https://raw.githubusercontent.com/dunstontc/learn-c/master/code/C/TCPL/src/assets/fig4.1.png)
 
-
 There is a tradeoff between the desire that each file have access only to the information it needs for its job and the practical reality that it is harder to maintain more header files. Up to some moderate program size, it is probably best to have one header file that contains everything that is to be shared between any two parts of the program; that is the decision we made here. For a much larger program, more organization and more headers would be needed.
 
 ## 4.6. Static Variables 
