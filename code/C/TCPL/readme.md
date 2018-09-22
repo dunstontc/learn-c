@@ -71,7 +71,7 @@
     - 5.11. Pointers to Functions
     - 5.12. Complicated Declarations
 6. Structures
-    - 6.1. Basicsof Structures
+    - 6.1. Basics of Structures
     - 6.2. Structures and Functions
     - 6.3. Arrays of Structures
     - 6.4. Pointers to Structures
@@ -220,3 +220,14 @@
     - **Exercise 5.15**: Add the option `-f` to fold upper and lower case together, so that case distinctions are not made during sorting; for example, `a` and `A` compare equal.
     - **Exercise 5.16**: Add the `-d` ("directory order") option, which makes comparisons only on letters, numbers and blanks. Make sure it works in conjunction with `-f`.
     - **Exercise 5.17**: Add a field-handling capability, so sorting may be done on fields within lines, each field sorted according to an independent set of options. (The index for this book was sorted with `-df` for the index category and `-n` for the page numbers.)
+    - **Exercise 5.18**: Make `dcl` recover from input errors.
+    - **Exercise 5.19**: Modify `undcl` so that it does not add redundant parentheses to declarations.
+    - **Exercise 5.20**: Expand `dcl` to handle declarations with function argument types, qualifiers like `const`, and so on.
+- Chapter 6
+    - **Exercise 6.1**: Our version of `getword` does not properly handle underscores, string constants, comments, or preprocessor control lines. Write a better version.
+    - **Exercise 6.2**: Write a program that reads a C program and prints in alphabetical order each group of variable names that are identical in the first 6 characters, but different somewhere thereafter. Don't count words within strings and comments. Make 6 a parameter that can be set from the command line.
+    - **Exercise 6.3**: Write a cross-referencer that prints a list of all words in a document, and, for each word, a list of the line numbers on which it occurs. Remove noise words like "the," "and," and so on.
+    - **Exercise 6.4**: Write a program that prints the distinct words in its input sorted into decreasing order of frequency of occurrence. Precede each word by its count.
+    - **Exercise 6.5**: Write a function `undef` that will remove an ameand definition from the table maintained by `lookup` and `install`. 
+    - **Exercise 6.6**: Implement a simple version of the `#define` processor (i.e., no arguments) suitable for use with C programs, based on the routines of this section. You may also find `getch` and `ungetch` helpful.
+- Chapter 7

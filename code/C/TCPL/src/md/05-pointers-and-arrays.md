@@ -973,3 +973,125 @@ This grammar can be used to parse declarations. For instance, consider this decl
 `pfa` will be identified as a `name` and thus as a `direct-dcl`. Then `pfa[]` is also a `direct-dcl`. Then `*pfa[]` is a recognized as a `dcl`, so `(*pfa[])` is a `direct-dcl`. Then `(*pfa[])()` is a `direct-dcl` and thus a `dcl`, We can also illustrate the parse with a parse tree like this (where `direct-dcl` has been abbreviated to `dir-dcl`):
 
 ![Figure 5.12](https://raw.githubusercontent.com/dunstontc/learn-c/master/code/C/TCPL/src/assets/fig5.12.png)
+
+The heart ofthe `dcl` program isa pair of functions, `dcl` and `dirdcl`, that parse a declaration according to this grammar. Because the grammar is recursively defined, the functions call each other recursively as they recognize pieces of a declaration; the program is called a recursive-descent parser.
+```c
+/* dcl: parse a declarator */
+void dcl(void)
+{
+    int ns;
+    for (ns = 0; gettoken()-- '*';) {
+        /* count *'s*/
+        ns++;
+    }
+    dirdcl();
+    while (ns-- > 0) {
+        strcat(out, " pointer to");
+    }
+}
+```
+Since the programs are intended to be illustrative, not bullet-proof, there are significant restrictions on dcl. It can only handle a simple data type like `char` or `int`. It does not handle argument types in functions, or qualifiers like `const`. Spurious blanks confuse it. It doesn't do much error recovery, so invalid declarations will also confuse it. These improvements are left as exercises.
+
+Here are the global variables and the `main` routine:
+```c
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+#define MAXTOKEN 100
+
+enum { NAME, PARENS, BRACKETS };
+
+void dcl(void);
+void dirdcl(void);
+
+int gettoken(void);
+int tokentype;           /* type of last token */
+char token[MAXTOKEN];    /* last token string */
+char name[MAXTOKEN];     /* identifier name */
+char datatype[MAXTOKEN]; /* data type = char, int, etc.*/
+char out[1000];          /* output string */
+
+int main() /* convert declaration to words */
+{
+    while (gettoken() != EOF)
+    {                            /* 1st token on line */
+        strcpy(datatype, token); /* is the datatype */
+        out[0] = '\0';
+        dcl();                   /* parse rest of line */
+        if (tokentype != '\n')
+            printf("syntax error\n");
+        printf("%s: %s %s\n", name, out, datatype);
+    }
+    return 0;
+}
+```
+The function `gettoken` skips blanks and tabs, then finds the next token in the input; a "token" is a name, a pair of parentheses, a pair of brackets perhaps including a number, or any other single character.
+```c
+/* return next token */
+int gettoken(void)
+{
+    int c, getch(void);
+    void ungetch(int);
+    char *p = token;
+    while ((c = getch()) == ' ' || c == '\t')
+        if (c == '(') {
+            if ((c = getch()) == ')') {
+                strcpy(token, "()");
+                return tokentype = PARENS;
+            } else {
+                ungetch(c);
+                return tokentype = '(';
+            }
+        } else if (c == '[') {
+            for (*p++ = c; (*p++ = getch()) != ']';)
+                ;
+            *p = '\0';
+            return tokentype = BRACKETS;
+        } else if (isalpha(c)) {
+            for (*p++ = c; isalnum(c = getch());)
+                *p++ = c;
+            *p = '\0';
+            ungetch(c);
+            return tokentype = NAME;
+        } else {
+            return tokentype = c;
+        }
+}
+```
+`getch` and `ungetch` were discussed in Chapter 4.
+
+Going in the other direction is easier, especially if we do not worry about generating redundant parentheses. The program `undcl` converts a word description like "x is a function returning a pointer to an array of pointers to functions returning char," which we will express as
+```
+    x () * [] * () char
+```
+to
+```c
+    char (*(*x())[])()
+```
+The abbreviated input syntax lets us reuse the `gettoken` function. `undcl` also uses the same external variables as `dcl` does.
+```c
+/* undcl: convert word description to declaration */ 
+int main())
+{
+    int type;
+    char tellip[JUXTOKEN];
+    while (qettoken() != EOF) {
+      strcpy(out, token);
+    while ((type =qettoken()) != '\n')·
+        if (type =~ PARENS || type == BRACKETS) 
+            strcat(out, token);
+        else if (type == '*') { 
+            sprintf(temp, "(*%s)", out); 
+            strcpy(out, temp);
+        } else if (type == NAME) { 
+            sprintf(temp, "%s %s", token, out); 
+            strcpy(out, temp);
+        } else {
+            printf("invalid input at %s\n", token);
+            printf("%s\n", out);
+        }
+    }
+    return 0;
+}
+```
