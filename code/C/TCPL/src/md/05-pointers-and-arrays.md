@@ -276,12 +276,700 @@ The other information needed is how much of `allocbuf` has been used. We use a p
 
 ![Figure 5.6](https://raw.githubusercontent.com/dunstontc/learn-c/master/code/C/TCPL/src/assets/fig5.6.png)
 
+```c
+#define ALLOCSIZE 10000          /* size of available space */
+
+static char allocbuf[ALLOCSIZE]; /* storage for alloc */
+static char *allocp = allocbuf;  /* next free position */
+
+/* return pointer to n characters */
+char *alloc(int n)
+{
+    if (allocbuf + ALLOCSIZE - allocp >= n) { /* it fits */
+        allocp += n;
+        return allocp - n; /* old p */
+    } else {                                  /* not enough room */
+        return 0;
+    }
+}
+
+/* free storage pointed to by p */
+void afree(char *p)
+{
+    if (p >= allocbuf && p < allocbuf + ALLOCSIZE) {
+        allocp = p;
+    }
+}
+```
+In general a pointer can be initialized just as any other variable can, though normally the only meaningful values are zero or an expression involving the addresses of previously defined data of appropriate type. The declaration
+```c
+    static char *allocp = allocbuf;
+```
+defines allocp to be a character pointer and initializes it to point to the beginning of `allocbuf`, which is the next free position when the program starts. This could have also been written
+```c
+    static char *allocp = &allocbuf[O];
+```
+since the array name is the address of the zeroth element.
+
+The test
+```c
+    if (allocbuf + ALLOCSIZE - allocp >= n) { /* it fits */
+```
+checks if there's enough room to satisfy a request for `n` characters. If there is, the new value of `allocp` would be at most one beyond the end of `allocbuf`. If the request can be satisfied, `alloc` returns a pointer to the beginning of a block of characters (notice the declaration of the function itself). If not, `alloc` must return some signal that no space is left. C guarantees that zero is never a valid address for data, so a return value of zero can be used to signal an abnormal event, in this case, no space.
+
+Pointers and integers are not interchangeable. Zero is the sole exception: the constant zero may be assigned to a pointer, and a pointer may be compared with the constant zero. The symbolic constant `NULL` is often used in place of zero, as a mnemonic to indicate more clearly that this is a special value for a pointer. `NULL` is defined in `<stdio.h>`. We will use `NULL` henceforth.
+
+Tests like
+```c
+    if (allocbuf + ALLOCSIZE - allocp >= n) { /* it fits */
+```
+and
+```c
+    if (p >= allocbuf && p < allocbuf + ALLOCSIZE)
+```
+show several important facets of pointer arithmetic. First, pointers may be compared under certain circumstances. If `p` and `q` point to members of the same array, then relations like `==`, `!=`, `<`, `>=`, etc., work properly. For example,
+```c
+    p < q
+```
+is true if p points to an earlier member of the array than q does. Any pointer can be meaningfully compared for equality or inequality with zero. But the behavior is undefined for arithmetic or comparisons with pointers that do not point to members of the same array. (There is one exception: the address of the first element past the end of an array can be used in pointer arithmetic.)
+
+Second, we have already observed that a pointer and an integer may be added or subtracted. The construction
+```c
+    p + n
+```
+means the address of the `n`-th object beyond the one p currently points to. This is true regardless of the kind of object `p` points to; `n` is scaled according to the size of the objects `p` points to, which is determined by the declaration of `p`. If an `int` is four bytes, for example, the `int` will be scaled by four.
+
+Pointer subtraction is also valid: if p and q point to elements of the same array, and `p < q`, then `q-p+ 1` is the number of elements from p to q inclusive. This fact can be used to write yet another version of strlen:
+
 
 ## 5.5. Character Pointers and Functions
+
+A *string constant*, written as
+```c
+    "I am a string"
+```
+is an array of characters. In the internal representation, the array is terminated with the null character `'\0'` so that programs can find the end. The length in storage is thus one more than the number of characters between the double quotes.
+
+Perhaps the most common occurrence of string constants is as arguments to functions, as in
+```c
+    printf("hello, world\n");
+```
+When a character string like this appears in a program, access to it is through a character pointer; `printf` receives a pointer to the beginning of the character array. That is, a string constant is accessed by a pointer to its first element
+
+String constants need not be function arguments. If `pmessage` is declared as
+```c
+    char *pmessage;
+```
+then the statement
+```c
+    pmessage = "now is the time";
+```
+assigns to `pmessage` a pointer to the character array. This is not a string copy; only pointers are involved. C does not provide any operators for processing an entire string of characters as a unit.
+
+There is an important difference between these definitions:
+```c
+    char amessage[] = "now is the time";      /* an array */
+    char *pmessage  = "now is the time";   /* a pointer */
+```
+`amessage` is an array, just big enough to hold the sequence of characters and ,`'\0'` that initializes it. Individual characters within the array may be changed but `amessage` will always refer to the same storage. On the other hand, `pmessage` is a pointer, initialized to point to a string constant; the pointer may subsequently be modified to point elsewhere, but the result is undefined if you try to modify the string contents.
+
+![Figure 5.7](https://raw.githubusercontent.com/dunstontc/learn-c/master/code/C/TCPL/src/assets/fig5.7.png)
+
+We will illustrate more aspects of pointers and arrays by studying versions of two useful functions adapted from the standard library. The first function is `strcpy(s, t)`, which copies the string `t` to the string `s`. It would be nice just to say `s = t` but this copies the pointer, not the characters. To copy the characters, we need a loop. The array version is first:
+```c
+/* strcpy: copy t to s; array subscript version */
+void strcpy(char *s, char *t)
+{
+    int i;
+    i = 0;
+    while ((s[i] = t[i]) != '\0') {
+        i++;
+    }
+}
+```
+For contrast, here is a version of `strcopy` with pointers:
+```c
+/* strcpy: copy t to s; pointer version 1 */
+void strcpy(char *s, char *t)
+{
+    while ((*s = *t) != '\0') {
+        s++;
+        t++;
+    }
+}
+```
+Because arguments are passed by value, `strcpy` can use the parameters `s` and `t` in any way it pleases. Here they are conveniently initialized pointers, which are marched along the arrays a character at a time, until the `'\0'` that terminates `t` has been copied to `s`.
+
+In practice, `strcpy` would not be written as we showed it above. Experienced C programmers would prefer
+```c
+/* strcpy: copy t to s; pointer version 2 */
+void strcpy(char *s, char *t)
+{
+    while((*s++ = *t++) != '\0') {
+        ;
+    }
+}
+```
+This moves the increment of `s` and `t` into the test part of the loop. The value of `*t++` is the character that `t` pointed to before `t` was incremented; the postfix `++` doesn't change `t` until after this character has been fetched. In the same way, the character is stored into the old `s` position before `s` is incremented. This character is also the value that is compared against `'\0'` to control the loop. The net effect is that characters are copied from `t` to `s`, up to and including the terminating `'\0'`.
+
+As the final abbreviation, observe that a comparison against `'\0'` is redundant, since the question is merely whether the expression is zero. So the function would likely be written as
+```c
+/* strcpy: copy t to s; pointer version 3 */
+void strcpy(char *s, char *t)
+{
+    while (*s++ = *t++) {
+        ;
+    }
+}
+```
+Although this may seem cryptic at first sight, the notational convenienceis considerable, and the idiom should be mastered, because you will see it frequently in C programs.
+
+The `strcpy` in the standard library (`<string.h>`) returns the target string as its function value.
+
+The second routine that we will examine is `strcmp(s, t)`, which compares the character strings `s` and `t`, and returns negative, zero or positive if `s` is lexicographically less than, equal to, or greater than `t`. The value is obtained by subtracting the characters at the first position where `s` and `t` disagree.
+```c
+/* strcmp: return <0 if s<t, 0 if s==t, >0 if s>t */ 
+int strcmp(char *s, char *t)
+{
+    int i;
+    for (i = 0; s[i] == t[i]; i++) 
+        if (s[i] == '\0')
+            return 0; 
+    return s[i] - t[i];
+}
+```
+The pointer version of `strcmp`:
+```c
+/* strcmp: return <0 if s<t, 0 if s==t, >0 if s>t */ 
+int strcmp(char *s, char *t)
+{
+    for ( ; *s == *t; s++, t++) 
+        if (*s == '\0')
+            return 0; 
+    return *s - *t;
+}
+```
+Since `++` and `--` are either prefix or postfix operators, other combinations of `*` and `++` and `--` occur, although less frequently. For example,
+```c
+    *--p
+```
+decrements `p` before fetching the character that `p` points to. In fact, the pair of expressions
+```c
+    *p++ = val; /* push val onto stack */
+    val = *--p; /* pop top of stack into val */
+```
+are the standard idioms for pushing and popping a stack; see Section 4.3.
+
+The header `<string.h>` contains declarations for the functions mentioned in this section, plus a variety of other string-handling functions from the standard library.
+
+
 ## 5.6. Pointer Arrays; Pointers to Pointers
+
+Since pointers are variables themselves, they can be stored in arrays just as other variables can. Let us illustrate by writing a program that will sort a set of text lines into alphabetic order, a stripped-down version of the UNIX program `sort`.
+
+In Chapter 3 we presented a Shell sort function that would sort an array of integers, and in Chapter 4 we improved on it with a quicksort. The same algorithms will work, except that now we have to deal with lines of text, which are of different lengths, and which, unlike integers, can't be compared or moved in a single operation. We need a data representation that will cope efficiently and conveniently with variable-length text lines.
+
+This is where the array of pointers enters. If the lines to be sorted are stored end-to-end in one long character array, then each line can be accessed by a pointer to its first character. The pointers themselves can be stored in an array. Two lines can be compared by passing their pointers to `strcmp`. When two out-of-order lines have to be exchanged, the pointers in the pointer array are exchanged, not the text lines themselves.
+
+![Figure 5.8](https://raw.githubusercontent.com/dunstontc/learn-c/master/code/C/TCPL/src/assets/fig5.8.png)
+
+This eliminates the twin problems of complicated storage management and high overhead that would go with moving the lines themselves.
+The sorting process has three steps:
+1. read all the lines of input
+2. sort them
+3. print them in order
+
+As usual, it's best to divide the program into functions that match this natural division, with the main routine controlling the other functions. Let us defer the sorting step for a moment, and concentrate on the data structure and the input and output.
+
+The input routine has to collect and save the characters of each line, and build an array of pointers to the lines. It will also have to count the number of input lines, since that information is needed for sorting and printing. Since the input function can only cope with a finite number of input lines, it can return some illegal line count like `-1` if too much input is presented.
+
+The output routine only has to print the lines in the order in which they appear in the array of pointers.
+```c
+
+```
+
+The function getline is from Section 1.9
+
+The main new thing is the declaration for `lineptr`:
+```c
+    char *lineptr[MAXLINES]
+```
+says that `lineptr` is an array of `MAXLINES` elements, each element of which is a pointer to a `char`. That is, `lineptr[i]` is a character pointer, and `*lineptr[i]` is the character it points to, the first character of the `i`-th saved text line.
+
+Since `lineptr` is itself the name of an array, it can be treated as a pointer in the same manner as in our earlier examples, and `writelines` can be written instead as
+```c
+/* writelines: write output lines*/
+void writelines(char *lineptr[], int nlines)
+{
+    while (nlines-- > 0) {
+        printf("%s\n", *lineptr++);
+    }
+}
+```
+Initially `*lineptr` points to the first line; each increment advances it to the next line pointer while `nlines` is counted down.
+
+With input and output under control, we can proceed to sorting. The quicksort from Chapter 4 needs minor changes: the declarations have to be modified, and the comparison operation must be done by calling `strcmp`. The algorithm remains the same, which gives us some confidence that it will still work.
+```c
+/* qsort: sort v[left]...v[right] into increasing order */
+void qsort(char *v[], int left, int right)
+{
+    int i, last;
+    void swap(char *v[], int i, int j);
+
+    if (left >= right) { /* do nothing if array contains */
+        return;          /* fewer than two elements */
+    }
+    swap(v, left, (left + right) / 2);
+    last = left;
+    for (i = left + 1; i <= right; i++) {
+        if (strcmp(v[i], v[left]) < 0) {
+            swap(v, ++last, i);
+        }
+    }
+    swap(v, left, last);
+    qsort(v, left, last - 1);
+    qsort(v, last + 1, right);
+}
+```
+Similarly, the swap routine needs only trivial changes:
+```c
+/*swap: interchange v[i] and v[j] */
+void swap(char *v[], int i, int j)
+{
+    char *temp;
+
+    temp = v[i];
+    v[i] = v[j];
+    v[j] = temp;
+}
+```
+Since any individual element of `v` (alias `lineptr`) is a character pointer, `temp` must be also, so one can be copied to the other.
+
+
 ## 5.7. Multi-dimensional Arrays
+
+C provides rectangular multi-dimensional arrays, although in practice they are much less used than arrays of pointers. In this section, we will show some of their properties.
+
+Consider the problem of date conversion, from day of the month to day of the year and vice versa. For example, March 1 is the 60th day of a non-leap year, and the 61st day of a leap year. Let us define two functions to do the conversions: `day_of_year` converts the month and day into the day of the year, and `month_day` converts the day of the year into the month and day. Since this latter function computes two values, the month and day arguments will be pointers:
+```c
+    month_day(1988, 60, &m, &d)
+```
+sets `m` to 2 and `d` to 29 (February 29th).
+
+These functions both need the same information, a table of the number of days in each month ("thirty days hath September ..."). Since the number of days per month differs for leap years and non-leap years, it's easier to separate them into two rows of a two-dimensional array than to keep track of what happens to February during computation. The array and the functions for performing the transformations are as follows:
+```c
+static char daytab[2][13] = {
+    {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31},
+    {0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}
+};
+
+/* day_of_year: set day of year from month & day */
+int day_of_year(int year, int month, int day)
+{
+    int i, leap;
+
+    leap = (year % 4 == 0 && year % 100 != 0) || year % 400 == 0;
+    for (i = 1; i < month; i++)
+    {
+        day += daytab[leap][i];
+    }
+    return day;
+}
+
+/* month_day: set month, day from day of year*/
+void month_day(int year, int yearday, int *pmonth, int *pday)
+{
+    int i, leap;
+    leap = (year % 4 == 0 && year % 100 != 0) || year % 400 == 0;
+
+    for (i = 1; yearday > daytab[leap][i]; i++) {
+        yearday -= daytab[leap][i];
+    }
+    *pmonth = i;
+    *pday = yearday;
+}
+```
+Recall that the arithmetic value of a logical expression, such as the one for `leap`, is either zero (false) or one (true), so it can be used as a subscript of the array day tab.
+
+The array day tab has to be external to both `day_of_year` and `month_day`, so they can both use it. We made it char to illustrate a legitimate use of `char` for storing small non-character integers.
+
+`daytab` is the first two-dimensionalarray we have dealt with. In C, a two-dimensional array is really a one-dimensional array, each of whose elements is an array. Hence subscripts are written as
+```c
+    daytab[i][j] /* [row][col] */
+```
+rather than
+```c
+    daytab[i, j] /* WRONG */
+```
+Other than this notational distinction, a two-dimensional array can be treated in much the same way as in other languages. Elements are stored by rows, so the rightmost subscript, or column, varies fastest as elements are accessed in storage order.
+
+An array is initialized by a list of initializers in braces; each row of a two- dimensional array is initialized by a corresponding sub-list. We started the array `daytab` with a column of zero so that month numbers can run from the natural 1 to 12 instead of 0 to 11. Since space is not at a premium here, this is clearer than adjusting the indices.
+
+If a two-dimensional array is to be passed to a function, the parameter declaration in the function must include the number of columns; the number of rows is irrelevant, since what is passed is, as before, a pointer to an array of rows, where each row is an array of 13 `int`s. In this particular case, it is a pointer to objects that are arrays of 13 `int`s. Thus if the array `daytab` is to be passed to a function `f`, the declaration of `f` would be
+```c
+    f(int daytab[2][13]) { ... }
+```
+it could also be
+```c
+    f(int daytab[][13]) { ... }
+```
+since the number of rows is irrelevant, or it could be
+```c
+    f(int (*daytab)[13]) { ... }
+```
+which says that the parameter is a pointer to an array of 13 integers. The parentheses are necessary since brackets `[]` have higher precedence than `*`. Without parentheses, the declaration
+```c
+    int *daytab[13]
+```
+is an array of 13 pointers to integers. More generally, only the first dimension (subscript) of an array is free; all the others have to be specified.
+
+Section 5.12 has a further discussion of complicated declarations.
+
+
 ## 5.8. Initialization of Pointer Arrays
+
+Consider the problem of writing a function `month_name(n)`, which returns a pointer to a character string containing the name of the `n`-th month. This is an ideal application for an internal `static` array. `month_name` contains a private array of character strings, and returns a pointer to the proper one when called. This section shows how that array of names is initialized.
+
+The syntax is similar to previous initializations:
+```c
+/* month_name: return nameof n-th month */
+char *month_name(int n)
+{
+    static char *name[] = {
+        "Illegal month",
+        "January", "February", "March",
+        "April", "May", "June",
+        "July", "August", "September",
+        "October", "November", "December"
+    };
+    return (n < 1 || n > 12) ? name[0] : name[n];
+}
+```
+The declaration of `name`, which is an array of character pointers, is the same as `lineptr` in the sorting example. The initializer is a list of character strings; each is assigned to the corresponding position in the array. The characters of the `i`-th string are placed somewhere, and a pointer to them is stored in `name[i]`. Since the size of the array name is not specified, the compiler counts the initializers and fills in the correct number.
+
+
 ## 5.9. Pointers vs. Multi-dimensional Arrays
+
+Newcomers to C are sometimes confused about the difference between a two-dimensional array and an array of pointers, such as name in the example above. Given the definitions
+```c
+    int a[10][20]; 
+    int *b[10];
+```
+then `a[3][4]` and `b[3][4]` are both syntactically legal references to a single `int`. But `a` is a true two-dimensional array: 200 `int`-sized locations have been set aside, and the conventional rectangular subscript calculation $20 * row + col$ is used to find the element `a[row][col]`. For `b`, however, the definition only allocates 10 pointers and does not initialize them; initialization must be done explicitly, either statically or with code. Assuming that each element of `b` does point to a twenty-element array, then there will be 200 `int`s set aside, plus ten cells for the pointers. The important advantage of the pointer array is that the rows of the array may be of different lengths. That is, each element of `b` need not point to a twenty-element vector; some may point to two elements, some to fifty, and some to none at all.
+
+Although we have phrased this discussion in terms of integers, by far the most frequent use of arrays of pointers is to store character strings of diverse lengths, as in the function `month_name`. Compare the declaration and picture for an array of pointers:
+```c
+  char *name[] = { "Illegal month", "Jan", "Feb", "Mar" };
+```
+![Figure 5.9](https://raw.githubusercontent.com/dunstontc/learn-c/master/code/C/TCPL/src/assets/fig5.9.png)
+
+with those for a two-dimensional array:
+```c
+    char aname[] [15] = { "Illegal month", "Jan", "Feb", "Mar" };
+```
+`aname`:
+![Figure 5.10](https://raw.githubusercontent.com/dunstontc/learn-c/master/code/C/TCPL/src/assets/fig5.10.png)
+
+
 ## 5.10. Command-line Arguments
+
+In environments that support C, there is a way to pass command-line arguments or parameters to a program when it begins executing. When `main` is called, it is called with two arguments. The first (conventionally called `argc`, for argument count) is the number of command-line arguments the program was invoked with; the second (`argv`, for argument vector) is a pointer to an array of character strings that contain the arguments, one per string. We customarily use multiple levels of pointers to manipulate these character strings.
+
+The simplest illustration is the program `echo`, which echoes its command-line arguments on a single line, separated by blanks. That is, the command
+```
+    echo hello, world
+```
+prints the output
+```
+    hello, world
+```
+By convention, `argv[0]` is the name by which the program was invoked, so `argc` is at least 1. If `argc` is 1, there are no command-line arguments after the program name. In the example above, `argc` is 3, and `argv[0]`, `argv[1]`, and `argv[2]` are `"echo"`, `"hello, "`, and `"world"` respectively. The first optional argument is `argv[1]` and the last is `argv[argc-1]`; additionally, the standard requires that `argv[argc]` be a null pointer.
+
+![Figure 5.11](https://raw.githubusercontent.com/dunstontc/learn-c/master/code/C/TCPL/src/assets/fig5.11.png)
+
+The first version of `echo` treats `argv` as an array of character pointers:
+```c
+#include <stdio.h>
+
+/* echo command-line arguments; 1st version */ 
+main(int argc, char *argv[])
+{
+    int i;
+
+    for (i = 1; i < argc; i++) {
+        printf("%s%s", argv[i], (i < argc-1) ? " " : "")
+    }
+    printf("\n");
+    return 0;
+}
+```
+Since `argv` is a pointer to an array of pointers, we can manipulate the pointer rather than index the array. This next variation is based on incrementing `argv`, which is a pointer to pointer to `char`, while `argc` is counted down:
+```c
+#include <stdio.h>
+
+/* echo command-line arguments; 2nd version */ 
+main(int argc, char *argv[])
+{
+    int i;
+
+    for (--argc > 0) {
+        printf("%s%s", *++argv, (argc > 1) ? " " : "")
+    }
+    printf("\n");
+    return 0;
+}
+```
+Since `argv` is a pointer to the beginning of the array of argument strings, incrementing it by 1 (`++argv`) makes it point at the original `argv[1]` instead of `argv[0]`. Each successive increment moves it along to the next argument; `*argv` is then the pointer to that argument. At the same time, `argc` is decremented; when it becomes zero, there are no arguments left to print.
+
+Alternatively, we could write the `printf` statement as
+```c
+    printf((argc > 1) ? "%s " : "%s", *++arqv);
+```
+This shows that the format argument of `printf` can be an expression too.
+
+As a second example, let us make some enhancements to the pattern-finding program from Section 4.1. If you recall, we wired the search pattern deep into the program, an obviously unsatisfactory arrangement. Following the lead of the UNIX program `grep`, let us change the program so the pattern to be matched is specified by the first argument on the command line.
+```c
+#include <stdio.h>
+#include <string.h>
+#define MAXLINE 1000
+int get_line(char *line, int max);
+
+/* find: print lines that match pattern from 1st arg */
+main(int argc, char *arqv[])
+{
+    char line[MAXLINE];
+    int found = 0;
+
+    if (argc != 2) 
+        printf("Usage: find pattern\n");
+    else 
+        while (get_line(line, MAXLINE) > 0) 
+            if (strstr(line, arqv[1]) != NULL) {
+                printf("%s", line);
+                found++;
+            }
+    return found;
+}
+```
+The standard library function `strstr(s, t)` returns a pointer to the first occurrence of the string `t` in the string `s`, or `NULL` if there is none. It is declared in `<string.h>`.
+
+The model can now be elaborated to illustrate further pointer constructions. Suppose we want to allow two optional arguments. One says "print all lines *except* those that match the pattern;" the second says "precede each printed line by its line number."
+
+A common convention for C programs on UNIX systems is that an argument that begins with a minus sign introduces an optional flag or parameter. If we choose `-x` (for "except") to signal the inversion, and `-n` ("number") to request line numbering, then the command
+```
+    find -x -n pattern
+```
+will print each line that doesn't match the pattern, preceded by its line number.
+
+Optional arguments should be permitted in any order, and the rest of the program should be independent of the number of arguments that were present. Furthermore, it is convenient for users if option arguments can be combined, as in
+```
+    find -nx pattern
+```
+Here is the program:
+```c
+#include <stdio.h>
+#include <string.h>
+#define MAXLINE 1000
+
+int get_line(char *line, int max);
+
+/* find: print lines that match pattern from 1st arg */
+main(int argc, char *argv[])
+{
+    char line[MAXLINE];
+    long lineno = 0;
+    int c, except = 0, number = 0, found = 0;
+    while (--argc > 0 && (*++argv)[0] == '-')
+        while (c = *++argv[0])
+            switch (c)
+            {
+            case 'x':
+                except = 1;
+                break;
+            case 'n':
+                number = 1;
+                break;
+            default:
+                printf("find: illegal option %c\n", c);
+                argc = 0;
+                found = -1;
+                break;
+            }
+    if (argc != 1)
+        printf("Usage: find -x -n pattern\n");
+    else
+        while (get_line(line, MAXLINE) > 0)
+        {
+            lineno++;
+            if ((strstr(line, *argv) != NULL) != except)
+            {
+                if (number)
+                    printf("%ld:", lineno);
+                printf("%s", line);
+                found++;
+            }
+        }
+    return found;
+}
+```
+`argc` is decremented and `argv` is incremented before each optional argument. At the end of the loop,if there are no errors, `argc` tells how many arguments remain unprocessed and `argv` points to the first of these. Thus `argc` should be 1 and `*argv` should point at the pattern. Notice that `*++argv` is a pointer to an argument string, so `(*++argv)[0]` is its first character. (An alternate valid form would be `**++argv`.) Because `[]` binds tighter than `*` and `++`, the parentheses are necessary; without them the expression would be taken as `*++(argv[0])`. In fact, that is what we used in the inner loop, where the task is to walk along a specific argument string. In the inner loop, the expression `*++argv[0]` increments the pointer `argv[0]`!
+
+It is rare that one uses pointer expressions more complicated than these; in such cases, breaking them into two or three steps will be more intuitive.
+
+
 ## 5.11. Pointers to Functions
+
+In C, a function itself is not a variable, but it is possible to define pointers to functions, which can be assigned, placed in arrays, passed to functions, returned by functions, and so on. We will illustrate this by modifying the sorting procedure written earlier in this chapter so that if the optional argument `-n` is given; it will sort the input lines numerically instead of lexicographically.
+
+A sort often consists of three parts; a comparison that determines the ordering of any pair of objects, an exchange that reverses their order, and a sorting algorithm that makes comparisons and exchanges until the objects are in order. The sorting algorithm is independent of the comparison and exchange operations, so by passing different comparison and exchange functions to it, we can arrange to sort by different criteria. This is the approach taken in our new sort.
+
+Lexicographic comparison of two lines is done by `strcmp`, as before; we will also need a routine `numcmp` that compares two lines on the basis of numeric value and returns the same kind of condition indication as strcmp does. These functions are declared ahead of `main` and a pointer to the appropriate one is passed to `qsort`. We have skimped on error processing for arguments, so as to concentrate on the main issues.
+```c
+#include <stdio.h>
+#include <string.h>
+#define MAXLINES 5000 /* max #lines to be sorted */
+
+char *lineptr[MAXLINES]; /* pointers to text lines */
+
+int readlines(char *lineptr[], int nlines);
+void writelines(char *lineptr[], int nlines);
+void qsort(void *lineptr[], int left, int right,
+           int (*comp)(void *, void *));
+int numcmp(char *, char *);
+
+/* sort input lines */
+int main(int argc, char *argv[])
+{
+    int nlines;      /* number of input lines read */
+    int numeric = 0; /* 1 if numeric sort */
+    if (argc > 1 && strcmp(argv[1], "-n") == 0)
+        numeric = 1;
+    if ((nlines = readlines(lineptr, MAXLINES)) >= 0) {
+        qsort((void **)lineptr, 0, nlines - 1,
+              (int (*)(void *, void *))(numeric ? numcmp : strcmp));
+        writelines(lineptr, nlines);
+        return 0;
+    } else {
+        printf("input too big to sort\n");
+        return 1;
+    }
+}
+```
+In the call to `qsort`, `strcmp` and `numcmp` are addresses of functions. Since they are known to be functions, the `&` operator is not necessary, in the same way that it is not needed before an array name.
+
+We have written qsort so it can process any data type, not just character strings. As indicated by the function prototype, `qsort` expects an array of pointers, two integers, and a function with two pointer arguments. The generic pointer type `void *` is used for the pointer arguments. Any pointer can be cast to `void *` and back again without loss of information, so we can call `qsort` by casting arguments to `void *`. The elaborate cast of the function argument casts the arguments of the comparison function. These will generally have no effect on actual representation, but assure the compiler that all is well.
+```c
+/* qsort: sortv[left] ... v[right] into increasing order */
+void qsort(void *v[], int left, int right, int (*comp)(void *, void *))
+{
+    int i, last;
+    void swap(void *v[], int, int);
+    if (left >= right) /* do nothing if array contains */
+        return;        /* fewer than two elements */
+    swap(v, left, (left + right) / 2);
+    last = left;
+    for (i = left + 1; i <= right; i++)
+        if ((*comp)(v[i], v[left]) < 0)
+            swap(v, ++last, i);
+    swap(v, left, last);
+    qsort(v, left, last - 1, comp);
+    qsort(v, last + 1, right, comp);
+}
+```
+The declarations should be studied with some care. The fourth parameter of `qsort` is
+```c
+    int (*comp)(void *, void *)
+```
+which says that `comp` is a pointer to a function that has two `void *` arguments and returns an `int`.
+
+The use of `comp` in the line
+```c
+    if ((*comp)(v[i], v[left]) < 0)
+```
+is consistent with the declaration: `comp` is a pointer to a function, `*comp` is the function, and
+```c
+    (*comp)(v[i], v[left])
+```
+is the call to it. The parentheses are needed so the components are correctly associated; without them,
+```c
+    int *comp(void *, void *)    /* WRONG */
+```
+says that `comp` is a function returning a pointer to an `int`, which is very different.
+
+We have already shown `strcmp`, which compares two strings. Here is `numcmp`, which compares two strings on a leading numeric value, computed by calling `atof`:
+```c
+/* numcmp: compare s1 and s2 numerically */
+int numcmp(char *s1, char *s2)
+{
+    double v1, v2;
+    v1 = atof(s1); v2 = atof(s2);
+    if (v1 < v2)
+        return -1;
+    else if (v1 > v2)
+        return 1;
+    else
+        return 0;
+}
+```
+The `swap` function, which exchanges two pointers, is identical to what we presented earlier in the chapter, except that the declarations are changed to `void *`.
+```c
+void swap(void *v[], int i, int j)
+{
+    void *temp;
+
+    temp = v[i];
+    v[i] = v[j];
+    v[j] =temp;
+}
+```
+A variety of other options can be added to the sorting program; some make challenging exercises.
+
+
 ## 5.12. Complicated Declarations
+
+C is sometimes castigated for the syntax of its declarations, particularly ones that involve pointers to functions. The syntax is an attempt to make the declaration and the use agree; it works well for simple cases, but it can be confusing for the harder ones, because declarations cannot be read left to right, and because parentheses are over-used. The difference between
+```c
+    int *f(); /* f: function returning pointer to int */
+```
+and
+```c
+    int (*pf)(); /* pf: pointer to function returning int */
+```
+illustrates the problem: `*` is a prefix operator and it has lower precedence than `()`, so parentheses are necessary to force the proper association.
+
+Although truly complicated declarations rarely arise in practice, it is impor- tant to know how to understand them, and, if necessary, how to create them. One good way to synthesize declarations is in small steps with `typedef`, which is discussed in Section 6.7. As an alternative, in this section we will present a pair of programs that convert from valid C to a word description and back again. The word description reads left to right.
+
+The first, `dcl`, is the more complex. It converts a C declaration into a word description, as in these examples:
+```
+    char **argv
+        argv: pointer to pointer to char
+    int (*daytab)[13]
+        daytab: pointer to array[13] of int
+    int *daytab[13]
+        daytab: array[13] of pointer to int
+    void *comp()
+        comp: function returning pointer to void
+    void (*comp)()
+        comp: pointer to function returning void
+    char (*(*x())[])()
+        x: function returning pointer to array[] of pointer to function returning char
+    char (*(*x[3])())[S]
+        x: array[3] of pointer to function returning pointer to array[5] of char
+```
+`dcl` is based on the grammar that specifies a declarator, which is spelled out precisely in Appendix A, Section 8.5; this is a simplified form:
+```
+    del:          optional *'s direct-dcl 
+    direct-dcl:   name
+                  (del)
+                  direct-dcl ( )
+                  direct-dcl [optional size]
+```
+In words, a `del` is a `direct-dcl`, perhaps preceded by `*`'s. A `direct-dcl` is a name, or a parenthesized `dcl`, or a `direct-dcl` followed by parentheses, or a `direct-dcl` followed by brackets with an optional size.
+
+This grammar can be used to parse declarations. For instance, consider this declarator:
+```c
+    (*pfa[])()
+```
+`pfa` will be identified as a `name` and thus as a `direct-dcl`. Then `pfa[]` is also a `direct-dcl`. Then `*pfa[]` is a recognized as a `dcl`, so `(*pfa[])` is a `direct-dcl`. Then `(*pfa[])()` is a `direct-dcl` and thus a `dcl`, We can also illustrate the parse with a parse tree like this (where `direct-dcl` has been abbreviated to `dir-dcl`):
+
+![Figure 5.12](https://raw.githubusercontent.com/dunstontc/learn-c/master/code/C/TCPL/src/assets/fig5.12.png)
