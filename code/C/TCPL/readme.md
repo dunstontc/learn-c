@@ -9,94 +9,94 @@
 ---
 
 1. A Tutorial Introduction
-    - 1.1. Getting Started
-    - 1.2. Variables and Arithmetic Expressions
-    - 1.3. The For Statement
-    - 1.4. Symbolic Constants
-    - 1.5. Character Input and Output 
+    - 1.1 Getting Started
+    - 1.2 Variables and Arithmetic Expressions
+    - 1.3 The For Statement
+    - 1.4 Symbolic Constants
+    - 1.5 Character Input and Output 
       - 1.5.1 File Copying
       - 1.5.2 Character Counting
       - 1.5.3 Line Counting
       - 1.5.4 Word Counting
-    - 1.6. Arrays
-    - 1.7. Function
-    - 1.8. Arguments – Call by Value
-    - 1.9. Character Arrays
-    - 1.10. External Variables and Scope
+    - 1.6 Arrays
+    - 1.7 Function
+    - 1.8 Arguments – Call by Value
+    - 1.9 Character Arrays
+    - 1.10 External Variables and Scope
 2. Types, Operators, and Expressions
-    - 2.1. Variable Names
-    - 2.2. Data Types and Sizes
-    - 2.3. Constants
-    - 2.4. Declarations
-    - 2.5. Arithmetic Operators
-    - 2.6. Relational and Logical Operators
-    - 2.7. Type Conversions
-    - 2.8. Increment and Decrement Operators
-    - 2.9. Bitwise Operators
-    - 2.10. Assignment Operators and Expressions
-    - 2.11. Conditional Expressions
-    - 2.12. Precedence and Order of Evaluation
+    - 2.1 Variable Names
+    - 2.2 Data Types and Sizes
+    - 2.3 Constants
+    - 2.4 Declarations
+    - 2.5 Arithmetic Operators
+    - 2.6 Relational and Logical Operators
+    - 2.7 Type Conversions
+    - 2.8 Increment and Decrement Operators
+    - 2.9 Bitwise Operators
+    - 2.10 Assignment Operators and Expressions
+    - 2.11 Conditional Expressions
+    - 2.12 Precedence and Order of Evaluation
 3. Control Flow
-    - 3.1. Statements and Blocks
-    - 3.2. If-Else
-    - 3.3. Else-If
-    - 3.4. Switch
-    - 3.5. Loops – While and For
-    - 3.6. Loops – Do-while
-    - 3.7. Break and Continue
-    - 3.8. Goto and Labels
+    - 3.1 Statements and Blocks
+    - 3.2 If-Else
+    - 3.3 Else-If
+    - 3.4 Switch
+    - 3.5 Loops – While and For
+    - 3.6 Loops – Do-while
+    - 3.7 Break and Continue
+    - 3.8 Goto and Labels
 4. Functions and Program Structure
-    - 4.1. Basics of Functions
-    - 4.2. Functions Returning Non-integers
-    - 4.3. External Variables
-    - 4.4. Scope Rules
-    - 4.5. Header Files
-    - 4.6. Static Variables 
-    - 4.7. Register Variables
-    - 4.8. Block Structure
-    - 4.9. Initialization
-    - 4.10. Recursion 
-    - 4.11. The C Preprocessor
+    - 4.1 Basics of Functions
+    - 4.2 Functions Returning Non-integers
+    - 4.3 External Variables
+    - 4.4 Scope Rules
+    - 4.5 Header Files
+    - 4.6 Static Variables 
+    - 4.7 Register Variables
+    - 4.8 Block Structure
+    - 4.9 Initialization
+    - 4.10 Recursion 
+    - 4.11 The C Preprocessor
 5. Pointers and Arrays
-    - 5.1. Pointers and Addresses
-    - 5.2. Pointers and Function Arguments
-    - 5.3. Pointers and Arrays
-    - 5.4. Address Arithmetic
-    - 5.5. Character Pointers and Functions
-    - 5.6. Pointer Arrays; Pointers to Pointers
-    - 5.7. Multi-dimensional Arrays
-    - 5.8. Initialization of Pointer Arrays
-    - 5.9. Pointers vs. Multi-dimensional Arrays
-    - 5.10. Command-line Arguments
-    - 5.11. Pointers to Functions
-    - 5.12. Complicated Declarations
+    - 5.1 Pointers and Addresses
+    - 5.2 Pointers and Function Arguments
+    - 5.3 Pointers and Arrays
+    - 5.4 Address Arithmetic
+    - 5.5 Character Pointers and Functions
+    - 5.6 Pointer Arrays; Pointers to Pointers
+    - 5.7 Multi-dimensional Arrays
+    - 5.8 Initialization of Pointer Arrays
+    - 5.9 Pointers vs. Multi-dimensional Arrays
+    - 5.10 Command-line Arguments
+    - 5.11 Pointers to Functions
+    - 5.12 Complicated Declarations
 6. Structures
-    - 6.1. Basics of Structures
-    - 6.2. Structures and Functions
-    - 6.3. Arrays of Structures
-    - 6.4. Pointers to Structures
-    - 6.5. Self-referential Structures
-    - 6.6. Table Lookup
-    - 6.7. Typedef
-    - 6.8. Unions
-    - 6.9. Bit-fields
+    - 6.1 Basics of Structures
+    - 6.2 Structures and Functions
+    - 6.3 Arrays of Structures
+    - 6.4 Pointers to Structures
+    - 6.5 Self-referential Structures
+    - 6.6 Table Lookup
+    - 6.7 Typedef
+    - 6.8 Unions
+    - 6.9 Bit-fields
 7. Input and Output
-    - 7.1. Standard Input and Output
-    - 7.2. Formatted Output-Printf
-    - 7.3. Variable-length Argument Lists
-    - 7.4. Formatted Input-Scanf
-    - 7.5. File Access
-    - 7.6. Error Handling - Stderr and Exit
-    - 7.7. Line Input and Output
-    - 7.8. Miscellaneous Functions
+    - 7.1 Standard Input and Output
+    - 7.2 Formatted Output - Printf
+    - 7.3 Variable-length Argument Lists
+    - 7.4 Formatted Input - Scanf
+    - 7.5 File Access
+    - 7.6 Error Handling - Stderr and Exit
+    - 7.7 Line Input and Output
+    - 7.8 Miscellaneous Functions
 8. The UNIX System Interface
-    - 8.1. File Descriptors
-    - 8.2. Low Level I/O-Read and Write
-    - 8.3. Open, Creat, Close, Unlink
-    - 8.4. Random Access - Lseek
-    - 8.5. Example - An Implementation of Fopen and Getc
-    - 8.6. Example - Listing Directories
-    - 8.7. Example - A Storage Allocator
+    - 8.1 File Descriptors
+    - 8.2 Low Level I/O-Read and Write
+    - 8.3 Open, Creat, Close, Unlink
+    - 8.4 Random Access - Lseek
+    - 8.5 Example - An Implementation of Fopen and Getc
+    - 8.6 Example - Listing Directories
+    - 8.7 Example - A Storage Allocator
 
 ---
 
@@ -231,3 +231,12 @@
     - **Exercise 6.5**: Write a function `undef` that will remove an ameand definition from the table maintained by `lookup` and `install`. 
     - **Exercise 6.6**: Implement a simple version of the `#define` processor (i.e., no arguments) suitable for use with C programs, based on the routines of this section. You may also find `getch` and `ungetch` helpful.
 - Chapter 7
+    - **Exercises 7.1**: Write a program that converts upper case to lower or lower case to upper, depending on the name it is invoked with, as found in `argv[0]`.
+    - **Exercises 7.2**: Write a program that will print arbitrary input in a sensible way. As a minimum, it should print non-graphic characters in octal or hexadecimal according to local custom, and break long text lines.
+    - **Exercises 7.3**: Revise `minprintf` to handle more of the other facilities of `printf`. 
+    - **Exercises 7.4**: Write a private version of `scanf` analogous to `minprintf` from the previous section.
+    - **Exercises 7.5**: Rewrite the postfix calculator of Chapter 4 to use `scanf` and/or `sscanf` to do the input and number conversion.
+    - **Exercises 7.6**: Write a program to compare two files, printing the first line where they differ.
+    - **Exercises 7.7**: Modify the pattern finding program of Chapter 5 to take its input from a set of named files or, if no files are named as arguments, from the standard input. Should the file name be printed when a matching line is found?
+    - **Exercises 7.8**: Write a program to print a set of files, starting each new one on a new page, with a title and a running page count for each file.
+    - **Exercises 7.9**: Functions like `isupper` can be implemented to save space or to save time. Explore both possibilities
