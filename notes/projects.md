@@ -33,7 +33,7 @@
 - [apple/darwin-xnu](https://github.com/apple/darwin-xnu)
   - The Darwin Kernel (mirror) 
 - [torvalds/linux](https://github.com/torvalds/linux)
-  - Linux kernel source <tre></tre>e></tre>e
+  - Linux kernel source
 - [curl/curl](https://github.com/curl/curl)
   - A command line tool and library for transferring data with URL syntax, supporting HTTP, HTTPS, FTP, FTPS, GOPHER, TFTP, SCP, SFTP, SMB, TELNET, DICT, LDAP, LDAPS, FILE, IMAP, SMTP, POP3, RTSP and RTMP. libcurl offers a myriad of powerful 
 - [jonas/tig](https://github.com/jonas/tig)
